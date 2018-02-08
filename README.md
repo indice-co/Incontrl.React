@@ -1,2 +1,2 @@
 # Incontrl.React ![alt text](icon/icon-64.png "Incontrl logo")
-Incontrol views ready to embead into any application (website)
+Incontrol views ready for developers to embed into their application (website)
