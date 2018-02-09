@@ -38,7 +38,9 @@ class DocumentList extends React.Component {
                 }
             }
         });
-        var sort = `${component.state.sortfield}${component.state.sortdir === 'asc'? '+': '-'}`;
+        var sort = `${component.state.sortfield}${component.state.sortdir === 'asc'
+            ? '+'
+            : '-'}`;
         console.log(' getdocuments ' + sort + ' ' + component.state.sortdir);
         var url = `https://${component.state.environment}.incontrl.io/subscriptions/${component.state.subscriptionid}/documents?Filter.TypeId=${component.state.doctypeid}&sort=${sort}`;
         console.log(url);
@@ -61,7 +63,10 @@ class DocumentList extends React.Component {
                 ? 'desc'
                 : 'asc';
         }
-        this.setState({sortfield: field,sortdir: dir}, () => {
+        this.setState({
+            sortfield: field,
+            sortdir: dir
+        }, () => {
             console.log('sort method: ' + field + ' ' + dir);
             this.search();
         });
@@ -70,7 +75,9 @@ class DocumentList extends React.Component {
     headerCell(label, sortfield) {
         var _class = 'sortable ';
         if (this.state.sortfield && sortfield.toLowerCase() === this.state.sortfield.toLowerCase()) {
-            _class = (this.state.sortdir === 'asc') ? 'sortable asc': 'sortable desc';
+            _class = (this.state.sortdir === 'asc')
+                ? 'sortable asc'
+                : 'sortable desc';
         }
 
         return (
@@ -86,7 +93,25 @@ class DocumentList extends React.Component {
         );
     }
 
-    cell(value, className) {}
+    cell(value,className) {
+        return (
+            <td>
+                <span>{value}</span>
+            </td>
+        );
+    }
+
+    dateCell(value,className) {
+        return this.cell(value,"date");
+    }
+
+    numericCell(value,className) {
+        return this.cell(value,"numeric");
+    }
+
+    statusCell(value) {
+        return this.cell(value,`status-${value}`);
+    }
 
     render() {
         var component = this;
@@ -96,13 +121,13 @@ class DocumentList extends React.Component {
                     <thead>
                         <tr>
                             {this.headerCell('Αριθμός', 'numberPrintable')}
-                            {this.headerCell('Ονοματεπώνυμο', 'fullName')}
+                            {this.headerCell('Ονοματεπώνυμο', 'recipient.contact.lastName')}
                             {this.headerCell('Ημερομηνία', 'date')}
                             {this.headerCell('Κατάσταση', 'status')}
                             {this.headerCell('Κωδ.Πληρωμής', 'paymentCode')}
-                            {this.headerCell('Νόμισμα', 'currency')}
+                            {this.headerCell('Νόμισμα', 'currencyCode')}
                             {this.headerCell('Αξία', 'subTotal')}
-                            {this.headerCell('ΦΠΑ', 'salesTax')}
+                            {this.headerCell('ΦΠΑ', 'totalSalesTax')}
                             {this.headerCell('Συνολική αξία', 'total')}
                         </tr>
                     </thead>
@@ -117,14 +142,14 @@ class DocumentList extends React.Component {
                                             <td>
                                                 <a href={component.addRootPath(doc.permaLink)} target='__new'>{doc.numberPrintable}</a>
                                             </td>
-                                            <td>{doc.recipient.contact.firstName} {doc.recipient.contact.lastName}</td>
-                                            <td>{doc.date}</td>
-                                            <td>{doc.status}</td>
-                                            <td>{doc.paymentCode}</td>
-                                            <td>{doc.currencyCode}</td>
-                                            <td>{doc.subTotal}</td>
-                                            <td>{doc.totalSalesTax}</td>
-                                            <td>{doc.total}</td>
+                                            <td>{doc.recipient.contact.lastName} {doc.recipient.contact.firstName}</td>
+                                            {component.dateCell(doc.date)}
+                                            {component.statusCell(doc.status)}
+                                            {component.cell(doc.paymentCode)}
+                                            {component.cell(doc.currencyCode)}
+                                            {component.numericCell(doc.subTotal)}
+                                            {component.numericCell(doc.totalSalesTax)}
+                                            {component.numericCell(doc.total)}
                                         </tr>
                                     )
                                 })
