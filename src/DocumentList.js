@@ -44,7 +44,9 @@ class DocumentList extends React.Component {
             }
         });
         var doctype = `?Filter.TypeId=${component.state.doctypeid}`
-        var sort = `&sort=${component.state.sortfield}${component.state.sortdir === 'asc'? '+' : '-'}`;
+        var sort = `&sort=${component.state.sortfield}${component.state.sortdir === 'asc'
+            ? '+'
+            : '-'}`;
         var size = `&size=${component.state.pagesize}`;
         var page = `&page=${component.state.page}`;
         var url = `https://${component.state.environment}.incontrl.io/subscriptions/${component.state.subscriptionid}/documents${doctype}${sort}${size}`;
@@ -100,18 +102,37 @@ class DocumentList extends React.Component {
 
     cell(value, className) {
         return (
-            <td>
-                <span>{value}</span>
+            <td className={className}>
+                <span className={className}>{value}</span>
+            </td>
+        );
+    }
+
+    codecell(value, className) {
+        return (
+            <td className={className}>
+                <span className={className}><code>{value}</code></span>
             </td>
         );
     }
 
     dateCell(value, className) {
-        return this.cell(value, "date");
+        var dateFormatter = new Intl.DateTimeFormat('el-GR');
+        var date = Date.parse(value);
+        return this.cell(dateFormatter.format(date), "date");
     }
 
-    numericCell(value, className) {
-        return this.cell(value, "numeric");
+    moneyCell(value, currencyCode) {
+        if(!value) value=0;
+        var numberFormat = new Intl.NumberFormat('el-GR', { style : 'currency', currency : currencyCode, minimumFractionDigits: 2, 
+        maximumFractionDigits: 2 });
+        return this.cell(numberFormat.format(value), "numeric");
+    }
+
+    numericCell(value, currencyCode) {
+        if(!value) value=0;
+        var numberFormat = new Intl.NumberFormat('el-GR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        return this.cell(numberFormat.format(value), "numeric");
     }
 
     statusCell(value) {
@@ -131,7 +152,7 @@ class DocumentList extends React.Component {
     searchbar() {
         return (
             <div className="search-bar">
-                page size:
+                Page size:&nbsp;
                 <select onChange={this.pagesize} value={this.state.pagesize}>
                     <option value="10">10</option>
                     <option value="20">20</option>
@@ -178,9 +199,9 @@ class DocumentList extends React.Component {
                                             {component.statusCell(doc.status)}
                                             {component.cell(doc.paymentCode)}
                                             {component.cell(doc.currencyCode)}
-                                            {component.numericCell(doc.subTotal)}
-                                            {component.numericCell(doc.totalSalesTax)}
-                                            {component.numericCell(doc.total)}
+                                            {component.numericCell(doc.subTotal,doc.currencyCode)}
+                                            {component.numericCell(doc.totalSalesTax,doc.currencyCode)}
+                                            {component.moneyCell(doc.total,doc.currencyCode)}
                                         </tr>
                                     )
                                 })
