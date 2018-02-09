@@ -10,11 +10,16 @@ class DocumentList extends React.Component {
             environment: this.props.environment,
             debug: this.props.debug,
             sortfield: 'numberPrintable',
-            sortdir: 'asc'
+            sortdir: 'asc',
+            pagesize: 50,
+            page: 1
         };
 
         this.sort = this
             .sort
+            .bind(this);
+        this.pagesize = this
+            .pagesize
             .bind(this);
         this.search = this
             .search
@@ -38,11 +43,11 @@ class DocumentList extends React.Component {
                 }
             }
         });
-        var sort = `${component.state.sortfield}${component.state.sortdir === 'asc'
-            ? '+'
-            : '-'}`;
-        console.log(' getdocuments ' + sort + ' ' + component.state.sortdir);
-        var url = `https://${component.state.environment}.incontrl.io/subscriptions/${component.state.subscriptionid}/documents?Filter.TypeId=${component.state.doctypeid}&sort=${sort}`;
+        var doctype = `?Filter.TypeId=${component.state.doctypeid}`
+        var sort = `&sort=${component.state.sortfield}${component.state.sortdir === 'asc'? '+' : '-'}`;
+        var size = `&size=${component.state.pagesize}`;
+        var page = `&page=${component.state.page}`
+        var url = `https://${component.state.environment}.incontrl.io/subscriptions/${component.state.subscriptionid}/documents${doctype}${sort}${size}`;
         console.log(url);
         xhr.open("GET", url);
         xhr.setRequestHeader("Authorization", "Bearer " + component.state.access_token);
@@ -76,8 +81,8 @@ class DocumentList extends React.Component {
         var _class = 'sortable ';
         if (this.state.sortfield && sortfield.toLowerCase() === this.state.sortfield.toLowerCase()) {
             _class = (this.state.sortdir === 'asc')
-                ? 'sortable asc'
-                : 'sortable desc';
+                ? 'sortable sort-asc'
+                : 'sortable sort-desc';
         }
 
         return (
@@ -93,7 +98,7 @@ class DocumentList extends React.Component {
         );
     }
 
-    cell(value,className) {
+    cell(value, className) {
         return (
             <td>
                 <span>{value}</span>
@@ -101,22 +106,48 @@ class DocumentList extends React.Component {
         );
     }
 
-    dateCell(value,className) {
-        return this.cell(value,"date");
+    dateCell(value, className) {
+        return this.cell(value, "date");
     }
 
-    numericCell(value,className) {
-        return this.cell(value,"numeric");
+    numericCell(value, className) {
+        return this.cell(value, "numeric");
     }
 
     statusCell(value) {
-        return this.cell(value,`status-${value}`);
+        return this.cell(value, `status-${value}`);
+    }
+
+    pagesize(e) {
+        e.preventDefault();
+        this.setState({
+            pagesize: + e.target.value,
+            page: 1
+        }, () => {
+            this.search();
+        })
+    }
+
+    searchbar() {
+        return (
+            <div className="search-bar">
+                page size:
+                <select onChange={this.pagesize} value={this.state.pagesize}>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+            </div>
+        );
     }
 
     render() {
         var component = this;
         return (
             <div>
+                {component.searchbar()}
+                <hr/>
                 <table cellPadding="4">
                     <thead>
                         <tr>
