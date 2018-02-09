@@ -46,7 +46,7 @@ class DocumentList extends React.Component {
         var doctype = `?Filter.TypeId=${component.state.doctypeid}`
         var sort = `&sort=${component.state.sortfield}${component.state.sortdir === 'asc'? '+' : '-'}`;
         var size = `&size=${component.state.pagesize}`;
-        var page = `&page=${component.state.page}`
+        var page = `&page=${component.state.page}`;
         var url = `https://${component.state.environment}.incontrl.io/subscriptions/${component.state.subscriptionid}/documents${doctype}${sort}${size}`;
         console.log(url);
         xhr.open("GET", url);
