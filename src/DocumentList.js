@@ -12,7 +12,8 @@ class DocumentList extends React.Component {
             sortfield: 'numberPrintable',
             sortdir: 'asc',
             pagesize: 50,
-            page: 1
+            page: 1,
+            culture: this.props.culture
         };
 
         this.sort = this
@@ -117,21 +118,21 @@ class DocumentList extends React.Component {
     }
 
     dateCell(value, className) {
-        var dateFormatter = new Intl.DateTimeFormat('el-GR');
+        var dateFormatter = new Intl.DateTimeFormat(this.state.culture);
         var date = Date.parse(value);
         return this.cell(dateFormatter.format(date), "date");
     }
 
     moneyCell(value, currencyCode) {
         if(!value) value=0;
-        var numberFormat = new Intl.NumberFormat('el-GR', { style : 'currency', currency : currencyCode, minimumFractionDigits: 2, 
+        var numberFormat = new Intl.NumberFormat(this.state.culture, { style : 'currency', currency : currencyCode, minimumFractionDigits: 2, 
         maximumFractionDigits: 2 });
         return this.cell(numberFormat.format(value), "numeric");
     }
 
     numericCell(value, currencyCode) {
         if(!value) value=0;
-        var numberFormat = new Intl.NumberFormat('el-GR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        var numberFormat = new Intl.NumberFormat(this.state.culture, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         return this.cell(numberFormat.format(value), "numeric");
     }
 

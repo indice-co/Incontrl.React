@@ -13,8 +13,11 @@ class App extends Component {
       view: this.props.view,
       subscription: null,
       environment: this.props.environment,
-      debug: this.props.debug
+      debug: this.props.debug,
+      culture: this.props.culture,
+      userlink: this.props.userlink
     };
+    
     if (!this.state.environment) {
       this.setState({environment: "sandbox"});
     }
@@ -79,14 +82,16 @@ class App extends Component {
         token={this.state.access_token}
         subscriptionid={this.state.subscriptionid}
         doctypeid={this.state.doctypeid}
-        environment={this.state.environment} />);
+        environment={this.state.environment}
+        culture={this.state.culture}
+        userlink={this.state.userlink}/>);
     } else {
       return (
         <h1>invalid view parameter</h1>
       );
     }
   }
-  
+
   debugInfo() {
     if (this.state.debug) {
       return (
