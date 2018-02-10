@@ -18,6 +18,12 @@ class DocumentList extends React.Component {
             culture: this.props.culture
         };
 
+        this.dateFormatter = new Intl.DateTimeFormat(this.state.culture);
+        this.numberFormatter = new Intl.NumberFormat(this.state.culture, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+
         this.sort = this
             .sort
             .bind(this);
@@ -136,31 +142,26 @@ class DocumentList extends React.Component {
     }
 
     dateCell(value, className) {
-        var dateFormatter = new Intl.DateTimeFormat(this.state.culture);
         var date = Date.parse(value);
-        return this.cell(dateFormatter.format(date), "date");
+        return this.cell(this.dateFormatter.format(date), "date");
     }
 
     moneyCell(value, currencyCode) {
         if (!value) 
             value = 0;
-        var numberFormat = new Intl.NumberFormat(this.state.culture, {
+        var moneyFormatter = new Intl.NumberFormat(this.state.culture, {
             style: 'currency',
             currency: currencyCode,
             minimumFractionDigits: 2,
             maximumFractionDigits: 2
         });
-        return this.cell(numberFormat.format(value), "numeric");
+        return this.cell(moneyFormatter.format(value), "numeric");
     }
 
     numericCell(value, currencyCode) {
         if (!value) 
             value = 0;
-        var numberFormat = new Intl.NumberFormat(this.state.culture, {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        });
-        return this.cell(numberFormat.format(value), "numeric");
+        return this.cell(this.numberFormatter.format(value), "numeric");
     }
 
     statusCell(value) {
@@ -190,8 +191,7 @@ class DocumentList extends React.Component {
 
                 <button onClick={this.firstpage} disabled={this.state.page === 1}>first</button>
                 <button onClick={this.previouspage} disabled={this.state.page === 1}>prev</button>
-                <label>page {this.state.page}
-                    of {this.state.pagecount}</label>
+                <label>page {this.state.page} of {this.state.pagecount}</label>
                 <button
                     onClick={this.nextpage}
                     disabled={this.state.page === this.state.pagecount}>next</button>
