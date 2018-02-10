@@ -13,6 +13,8 @@ class DocumentList extends React.Component {
             sortdir: 'asc',
             pagesize: 50,
             page: 1,
+            pagecount: 1,
+            count: 0,
             culture: this.props.culture
         };
 
@@ -24,6 +26,18 @@ class DocumentList extends React.Component {
             .bind(this);
         this.search = this
             .search
+            .bind(this);
+        this.firstpage = this
+            .firstpage
+            .bind(this);
+        this.nextpage = this
+            .nextpage
+            .bind(this);
+        this.previouspage = this
+            .previouspage
+            .bind(this);
+        this.lastpage = this
+            .lastpage
             .bind(this);
     }
 
@@ -38,9 +52,10 @@ class DocumentList extends React.Component {
             if (xhr.readyState === 4) {
                 if (xhr.status === 200) {
                     var documents_response = JSON.parse(xhr.response);
-                    component.setState({documents: documents_response.items});
+                    var pagecount = Math.round((documents_response.count + component.state.pagesize - 1) / component.state.pagesize);
+                    component.setState({documents: documents_response.items, count: documents_response.count, pagecount: pagecount});
                 } else {
-                    component.setState({documents: null});
+                    component.setState({documents: null, count: 0, pagecount: 0});
                 }
             }
         });
@@ -50,7 +65,8 @@ class DocumentList extends React.Component {
             : '-'}`;
         var size = `&size=${component.state.pagesize}`;
         var page = `&page=${component.state.page}`;
-        var url = `https://${component.state.environment}.incontrl.io/subscriptions/${component.state.subscriptionid}/documents${doctype}${sort}${size}`;
+        var culture = `&culture=${component.state.culture}`;
+        var url = `https://${component.state.environment}.incontrl.io/subscriptions/${component.state.subscriptionid}/documents${doctype}${page}${size}${sort}${culture}`;
         console.log(url);
         xhr.open("GET", url);
         xhr.setRequestHeader("Authorization", "Bearer " + component.state.access_token);
@@ -112,7 +128,9 @@ class DocumentList extends React.Component {
     codecell(value, className) {
         return (
             <td className={className}>
-                <span className={className}><code>{value}</code></span>
+                <span className={className}>
+                    <code>{value}</code>
+                </span>
             </td>
         );
     }
@@ -124,15 +142,24 @@ class DocumentList extends React.Component {
     }
 
     moneyCell(value, currencyCode) {
-        if(!value) value=0;
-        var numberFormat = new Intl.NumberFormat(this.state.culture, { style : 'currency', currency : currencyCode, minimumFractionDigits: 2, 
-        maximumFractionDigits: 2 });
+        if (!value) 
+            value = 0;
+        var numberFormat = new Intl.NumberFormat(this.state.culture, {
+            style: 'currency',
+            currency: currencyCode,
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
         return this.cell(numberFormat.format(value), "numeric");
     }
 
     numericCell(value, currencyCode) {
-        if(!value) value=0;
-        var numberFormat = new Intl.NumberFormat(this.state.culture, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        if (!value) 
+            value = 0;
+        var numberFormat = new Intl.NumberFormat(this.state.culture, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
         return this.cell(numberFormat.format(value), "numeric");
     }
 
@@ -153,15 +180,62 @@ class DocumentList extends React.Component {
     searchbar() {
         return (
             <div className="search-bar">
-                Page size:&nbsp;
+                Page size:
                 <select onChange={this.pagesize} value={this.state.pagesize}>
                     <option value="10">10</option>
                     <option value="20">20</option>
                     <option value="50">50</option>
                     <option value="100">100</option>
                 </select>
+
+                <button onClick={this.firstpage} disabled={this.state.page === 1}>first</button>
+                <button onClick={this.previouspage} disabled={this.state.page === 1}>prev</button>
+                <label>page {this.state.page}
+                    of {this.state.pagecount}</label>
+                <button
+                    onClick={this.nextpage}
+                    disabled={this.state.page === this.state.pagecount}>next</button>
+                <button
+                    onClick={this.lastpage}
+                    disabled={this.state.page === this.state.pagecount}>last</button>
             </div>
         );
+    }
+
+    firstpage() {
+        this.setState({
+            page: 1
+        }, () => {
+            this.search();
+        })
+    }
+
+    previouspage() {
+        this.setState((prevState) => {
+            return {
+                page: prevState.page - 1
+            }
+        }, () => {
+            this.search();
+        })
+    }
+
+    nextpage() {
+        this.setState((prevState) => {
+            return {
+                page: prevState.page + 1
+            }
+        }, () => {
+            this.search();
+        })
+    }
+
+    lastpage() {
+        this.setState((prevState) => {
+            return {page: prevState.pagecount}
+        }, () => {
+            this.search();
+        })
     }
 
     render() {
@@ -200,9 +274,9 @@ class DocumentList extends React.Component {
                                             {component.statusCell(doc.status)}
                                             {component.cell(doc.paymentCode)}
                                             {component.cell(doc.currencyCode)}
-                                            {component.numericCell(doc.subTotal,doc.currencyCode)}
-                                            {component.numericCell(doc.totalSalesTax,doc.currencyCode)}
-                                            {component.moneyCell(doc.total,doc.currencyCode)}
+                                            {component.numericCell(doc.subTotal, doc.currencyCode)}
+                                            {component.numericCell(doc.totalSalesTax, doc.currencyCode)}
+                                            {component.moneyCell(doc.total, doc.currencyCode)}
                                         </tr>
                                     )
                                 })
@@ -215,4 +289,4 @@ class DocumentList extends React.Component {
     }
 }
 
-export default DocumentList
+export default DocumentList;
