@@ -17,6 +17,10 @@ class DocumentList extends React.Component {
             count: 0,
             culture: this.props.culture
         };
+        // userlinkfunc: eval(this.props.userlink)
+        var funcstring = this.props.userlink;
+        // console.log(func('lalala'));
+        this.userlinkfunc = eval(funcstring);
 
         this.dateFormatter = new Intl.DateTimeFormat(this.state.culture);
         this.numberFormatter = new Intl.NumberFormat(this.state.culture, {
@@ -269,7 +273,9 @@ class DocumentList extends React.Component {
                                             <td>
                                                 <a href={component.addRootPath(doc.permaLink)} target='__new'>{doc.numberPrintable}</a>
                                             </td>
-                                            <td>{doc.recipient.contact.lastName} {doc.recipient.contact.firstName}</td>
+                                            <td>
+                                                <a href={component.userlinkfunc(doc.id)} target='__new'>{doc.recipient.contact.lastName} {doc.recipient.contact.firstName}</a>
+                                            </td>
                                             {component.dateCell(doc.date)}
                                             {component.statusCell(doc.status)}
                                             {component.cell(doc.paymentCode)}
