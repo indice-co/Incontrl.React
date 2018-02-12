@@ -116,12 +116,9 @@ class DocumentList extends React.Component {
 
         return (
             <th
-                className={_class}
-                onClick={this
-                .sort
-                .bind(this, sortfield)}>
+                className={_class}>
                 <div>
-                    <a href="">
+                    <a href="" onClick={this.sort.bind(this, sortfield)}>
                         <span>{label}</span>
                     </a>
                 </div>
