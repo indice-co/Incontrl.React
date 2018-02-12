@@ -271,6 +271,7 @@ class DocumentList extends React.Component {
             <div>
                 {component.searchbar()}
                 <hr/>
+                <div className="table-responsive">
                 <table className="table table-hover table-sm grid" cellPadding="4">
                     <thead>
                         <tr>
@@ -314,6 +315,7 @@ class DocumentList extends React.Component {
                         }
                     </tbody>
                 </table>
+                </div>
             </div>
         );
     }
