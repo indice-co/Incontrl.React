@@ -17,7 +17,7 @@ class DocumentList extends React.Component {
             count: 0,
             culture: this.props.culture
         };
-        
+
         this.userlinkfunc = eval(this.props.userlink);
         // console.log(this.userlinkfunc('lalala'));
 
@@ -120,9 +120,11 @@ class DocumentList extends React.Component {
                 onClick={this
                 .sort
                 .bind(this, sortfield)}>
-                <a href="#">
-                    <span>{label}</span>
-                </a>
+                <div>
+                    <a href="#">
+                        <span>{label}</span>
+                    </a>
+                </div>
             </th>
         );
     }
@@ -195,7 +197,8 @@ class DocumentList extends React.Component {
 
                 <button onClick={this.firstpage} disabled={this.state.page === 1}>first</button>
                 <button onClick={this.previouspage} disabled={this.state.page === 1}>prev</button>
-                <label>page {this.state.page} of {this.state.pagecount}</label>
+                <label>page {this.state.page}
+                    of {this.state.pagecount}</label>
                 <button
                     onClick={this.nextpage}
                     disabled={this.state.page === this.state.pagecount}>next</button>
