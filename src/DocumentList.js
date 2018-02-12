@@ -198,40 +198,27 @@ class DocumentList extends React.Component {
                 <nav aria-label="pager">
                     <ul className="pagination">
                         <li className={this.state.page === 1 ? "page-item disabled":"page-item"}>
-                            <a
-                                onClick={this.firstpage}
-                                className="page-link"
-                                href="">
+                            <a onClick={this.firstpage} className="page-link"href="#">
                                 <span aria-hidden="true">&laquo;&laquo;</span>
                                 <span class="sr-only">First</span></a>
                         </li>
                         <li className={this.state.page === 1 ? "page-item disabled":"page-item"}>
-                            <a
-                                onClick={this.previouspage}
-                                className="page-link"
-                                href="">
+                            <a onClick={this.previouspage} className="page-link" href="#">
                                 <span aria-hidden="true">&laquo;</span>
                                 <span class="sr-only">Previous</span>
                             </a>
                         </li>
                         <li className="page-item">
-                            <label>Page {this.state.page}
-                                of {this.state.pagecount}</label>
+                            <label>Page {this.state.page} of {this.state.pagecount}</label>
                         </li>
                         <li className={this.state.page === this.state.pagecount ? "page-item disabled":"page-item"}>
-                            <a
-                                onClick={this.nextpage}
-                                className="page-link"
-                                href="">
+                            <a onClick={this.nextpage} className="page-link" href="#">
                                 <span aria-hidden="true">&raquo;</span>
                                 <span class="sr-only">Next</span>
                             </a>
                         </li>
                         <li className={this.state.page === this.state.pagecount ? "page-item disabled":"page-item"}>
-                            <a
-                                onClick={this.lastpage}
-                                className="page-link"
-                                href="">
+                            <a onClick={this.lastpage} className="page-link" href="#">
                                 <span aria-hidden="true">&raquo;&raquo;</span>
                                 <span class="sr-only">Last</span>
                             </a>
@@ -299,7 +286,8 @@ class DocumentList extends React.Component {
                         </tr>
                     </thead>
                     <tbody>
-                        {this.state.documents
+                        {
+                            this.state.documents
                             ? this
                                 .state
                                 .documents
@@ -323,7 +311,7 @@ class DocumentList extends React.Component {
                                     )
                                 })
                             : ''
-}
+                        }
                     </tbody>
                 </table>
             </div>
