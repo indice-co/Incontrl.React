@@ -121,7 +121,7 @@ class DocumentList extends React.Component {
                 .sort
                 .bind(this, sortfield)}>
                 <div>
-                    <a href="#">
+                    <a href="">
                         <span>{label}</span>
                     </a>
                 </div>
@@ -251,7 +251,7 @@ class DocumentList extends React.Component {
             <div>
                 {component.searchbar()}
                 <hr/>
-                <table cellPadding="4">
+                <table className="table table-hover table-sm grid" cellPadding="4">
                     <thead>
                         <tr>
                             {this.headerCell('Αριθμός', 'numberPrintable')}
