@@ -169,7 +169,7 @@ class DocumentList extends React.Component {
     }
 
     statusCell(value) {
-        return this.cell(value, `status-${value}`);
+        return this.cell(value, `status-${value.toLowerCase()}`);
     }
 
     pagesize(e) {
