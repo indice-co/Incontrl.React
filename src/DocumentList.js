@@ -115,10 +115,13 @@ class DocumentList extends React.Component {
         }
 
         return (
-            <th
-                className={_class}>
+            <th className={_class}>
                 <div>
-                    <a href="" onClick={this.sort.bind(this, sortfield)}>
+                    <a
+                        href=""
+                        onClick={this
+                        .sort
+                        .bind(this, sortfield)}>
                         <span>{label}</span>
                     </a>
                 </div>
@@ -192,16 +195,49 @@ class DocumentList extends React.Component {
                     <option value="100">100</option>
                 </select>
 
-                <button onClick={this.firstpage} disabled={this.state.page === 1}>first</button>
-                <button onClick={this.previouspage} disabled={this.state.page === 1}>prev</button>
-                <label>page {this.state.page}
-                    of {this.state.pagecount}</label>
-                <button
-                    onClick={this.nextpage}
-                    disabled={this.state.page === this.state.pagecount}>next</button>
-                <button
-                    onClick={this.lastpage}
-                    disabled={this.state.page === this.state.pagecount}>last</button>
+                <nav aria-label="pager">
+                    <ul className="pagination">
+                        <li className={this.state.page === 1 ? "page-item disabled":"page-item"}>
+                            <a
+                                onClick={this.firstpage}
+                                className="page-link"
+                                href="">
+                                <span aria-hidden="true">&laquo;&laquo;</span>
+                                <span class="sr-only">First</span></a>
+                        </li>
+                        <li className={this.state.page === 1 ? "page-item disabled":"page-item"}>
+                            <a
+                                onClick={this.previouspage}
+                                className="page-link"
+                                href="">
+                                <span aria-hidden="true">&laquo;</span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                        </li>
+                        <li className="page-item">
+                            <label>Page {this.state.page}
+                                of {this.state.pagecount}</label>
+                        </li>
+                        <li className={this.state.page === this.state.pagecount ? "page-item disabled":"page-item"}>
+                            <a
+                                onClick={this.nextpage}
+                                className="page-link"
+                                href="">
+                                <span aria-hidden="true">&raquo;</span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </li>
+                        <li className={this.state.page === this.state.pagecount ? "page-item disabled":"page-item"}>
+                            <a
+                                onClick={this.lastpage}
+                                className="page-link"
+                                href="">
+                                <span aria-hidden="true">&raquo;&raquo;</span>
+                                <span class="sr-only">Last</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
         );
     }
