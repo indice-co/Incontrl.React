@@ -17,10 +17,9 @@ class DocumentList extends React.Component {
             count: 0,
             culture: this.props.culture
         };
-        // userlinkfunc: eval(this.props.userlink)
-        var funcstring = this.props.userlink;
-        // console.log(func('lalala'));
-        this.userlinkfunc = eval(funcstring);
+        
+        this.userlinkfunc = eval(this.props.userlink);
+        // console.log(this.userlinkfunc('lalala'));
 
         this.dateFormatter = new Intl.DateTimeFormat(this.state.culture);
         this.numberFormatter = new Intl.NumberFormat(this.state.culture, {
@@ -86,7 +85,8 @@ class DocumentList extends React.Component {
     }
 
     addRootPath(permaLink) {
-        return `https://${this.state.environment}.incontrl.io${permaLink}`;
+        var culture = `?culture=${this.state.culture}`;
+        return `https://${this.state.environment}.incontrl.io${permaLink}${culture}`;
     }
 
     sort(field, e) {
