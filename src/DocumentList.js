@@ -68,10 +68,8 @@ class DocumentList extends React.Component {
                 }
             }
         });
-        var doctype = `?Filter.TypeId=${component.state.doctypeid}`
-        var sort = `&sort=${component.state.sortfield}${component.state.sortdir === 'asc'
-            ? '+'
-            : '-'}`;
+        var doctype = `?Filter.TypeId=${component.state.doctypeid}`;
+        var sort = `&sort=${component.state.sortfield}${component.state.sortdir === 'asc' ? '+': '-'}`;
         var size = `&size=${component.state.pagesize}`;
         var page = `&page=${component.state.page}`;
         var culture = `&culture=${component.state.culture}`;
@@ -93,9 +91,7 @@ class DocumentList extends React.Component {
         e.preventDefault();
         var dir = 'asc';
         if (field.toLowerCase() === this.state.sortfield.toLowerCase()) {
-            dir = this.state.sortdir === 'asc'
-                ? 'desc'
-                : 'asc';
+            dir = this.state.sortdir === 'asc' ? 'desc' : 'asc';
         }
         this.setState({
             sortfield: field,
@@ -109,19 +105,13 @@ class DocumentList extends React.Component {
     headerCell(label, sortfield) {
         var _class = 'sortable ';
         if (this.state.sortfield && sortfield.toLowerCase() === this.state.sortfield.toLowerCase()) {
-            _class = (this.state.sortdir === 'asc')
-                ? 'sortable sort-asc'
-                : 'sortable sort-desc';
+            _class = (this.state.sortdir === 'asc') ? 'sortable sort-asc' : 'sortable sort-desc';
         }
 
         return (
             <th className={_class}>
                 <div>
-                    <a
-                        href=""
-                        onClick={this
-                        .sort
-                        .bind(this, sortfield)}>
+                    <a href="" onClick={this.sort.bind(this, sortfield)}>
                         <span>{label}</span>
                     </a>
                 </div>
@@ -198,12 +188,12 @@ class DocumentList extends React.Component {
                 <nav aria-label="pager">
                     <ul className="pagination">
                         <li className={this.state.page === 1 ? "page-item disabled":"page-item"}>
-                            <a onClick={this.firstpage} className="page-link"href="#">
+                            <a onClick={this.firstpage} className="page-link"href="#nowhere">
                                 <span aria-hidden="true">&laquo;&laquo;</span>
                                 <span class="sr-only">First</span></a>
                         </li>
                         <li className={this.state.page === 1 ? "page-item disabled":"page-item"}>
-                            <a onClick={this.previouspage} className="page-link" href="#">
+                            <a onClick={this.previouspage} className="page-link" href="#nowhere">
                                 <span aria-hidden="true">&laquo;</span>
                                 <span class="sr-only">Previous</span>
                             </a>
@@ -212,13 +202,13 @@ class DocumentList extends React.Component {
                             <label>Page {this.state.page} of {this.state.pagecount}</label>
                         </li>
                         <li className={this.state.page === this.state.pagecount ? "page-item disabled":"page-item"}>
-                            <a onClick={this.nextpage} className="page-link" href="#">
+                            <a onClick={this.nextpage} className="page-link" href="#nowhere">
                                 <span aria-hidden="true">&raquo;</span>
                                 <span class="sr-only">Next</span>
                             </a>
                         </li>
                         <li className={this.state.page === this.state.pagecount ? "page-item disabled":"page-item"}>
-                            <a onClick={this.lastpage} className="page-link" href="#">
+                            <a onClick={this.lastpage} className="page-link" href="#nowhere">
                                 <span aria-hidden="true">&raquo;&raquo;</span>
                                 <span class="sr-only">Last</span>
                             </a>
