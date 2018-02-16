@@ -16,7 +16,19 @@ window.InContrl = function(id) {
   var culture = root.getAttribute("culture");
   var userlink = root.getAttribute("user-link");
 
-  ReactDOM.render(<App culture={culture} debug={debug} environment={environment} token={token} 
-    subscriptionid={subscriptionid} doctypeid={doctypeid} docid={docid} view={view} userlink={userlink} />,root);
+  ReactDOM.render(
+    <App
+      culture={culture}
+      debug={debug}
+      environment={environment}
+      token={token}
+      subscriptionid={subscriptionid}
+      doctypeid={doctypeid}
+      docid={docid}
+      view={view}
+      userlink={userlink}
+    />,
+    root
+  );
 };
 registerServiceWorker();

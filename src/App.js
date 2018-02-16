@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import './App.css';
 import DocumentList from './DocumentList';
+import TransactionList from './TransactionList';
 
 class App extends Component {
   constructor(props) {
@@ -77,11 +78,19 @@ class App extends Component {
   }
 
   appView() {
-    if (this.state.view === 'list') {
+    if (this.state.view === 'list' || this.state.view === 'documents' ) {
       return (<DocumentList
         token={this.state.access_token}
         subscriptionid={this.state.subscriptionid}
         doctypeid={this.state.doctypeid}
+        environment={this.state.environment}
+        culture={this.state.culture}
+        userlink={this.state.userlink}/>);
+    } else if (this.state.view === 'transactions') {
+      return (<TransactionList
+        token={this.state.access_token}
+        subscriptionid={this.state.subscriptionid}
+        paymentoptionid={this.state.paymentoptionid}
         environment={this.state.environment}
         culture={this.state.culture}
         userlink={this.state.userlink}/>);

@@ -21,7 +21,6 @@ export default class DocumentList extends React.Component {
     };
 
     this.userlinkfunc = eval(this.props.userlink);
-
     this.sort = this.sort.bind(this);
     this.search = this.search.bind(this);
     this.pageChanged = this.pageChanged.bind(this);

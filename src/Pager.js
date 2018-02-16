@@ -17,8 +17,12 @@ export default class Pager extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    var pagecount = Math.round((nextProps.count + this.state.pagesize - 1) / this.state.pagesize);
-    this.setState({ pagecount: pagecount });
+    if (nextProps.count !== this.state.count) {
+      var pagecount = Math.round(
+        (nextProps.count + this.state.pagesize - 1) / this.state.pagesize
+      );
+      this.setState({ pagecount: pagecount });
+    }
   }
 
   pagesize(e) {
@@ -95,7 +99,9 @@ export default class Pager extends React.Component {
         <nav aria-label="pager">
           <ul className="pagination">
             <li
-              className={this.state.page === 1 ? "page-item disabled" : "page-item"}
+              className={
+                this.state.page === 1 ? "page-item disabled" : "page-item"
+              }
             >
               <a onClick={this.firstpage} className="page-link" href="#nowhere">
                 <span aria-hidden="true">&laquo;&laquo;</span>
@@ -103,9 +109,15 @@ export default class Pager extends React.Component {
               </a>
             </li>
             <li
-              className={this.state.page === 1 ? "page-item disabled" : "page-item"}
+              className={
+                this.state.page === 1 ? "page-item disabled" : "page-item"
+              }
             >
-              <a onClick={this.previouspage} className="page-link" href="#nowhere">
+              <a
+                onClick={this.previouspage}
+                className="page-link"
+                href="#nowhere"
+              >
                 <span aria-hidden="true">&laquo;</span>
                 <span class="sr-only">Previous</span>
               </a>
@@ -127,7 +139,13 @@ export default class Pager extends React.Component {
                 <span class="sr-only">Next</span>
               </a>
             </li>
-            <li className={this.state.page === this.state.pagecount? "page-item disabled": "page-item"}>
+            <li
+              className={
+                this.state.page === this.state.pagecount
+                  ? "page-item disabled"
+                  : "page-item"
+              }
+            >
               <a onClick={this.lastpage} className="page-link" href="#nowhere">
                 <span aria-hidden="true">&raquo;&raquo;</span>
                 <span class="sr-only">Last</span>
