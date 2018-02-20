@@ -88,7 +88,7 @@ export default class Pager extends React.Component {
 
   render() {
     return (
-      <div className="search-bar">
+      <span className="search-bar">
         Page size:
         <select onChange={this.pagesize} value={this.state.pagesize}>
           <option value="10">10</option>
@@ -98,28 +98,16 @@ export default class Pager extends React.Component {
         </select>
         <nav aria-label="pager">
           <ul className="pagination">
-            <li
-              className={
-                this.state.page === 1 ? "page-item disabled" : "page-item"
-              }
-            >
+            <li className={this.state.page === 1 ? "page-item disabled" : "page-item"}>
               <a onClick={this.firstpage} className="page-link" href="#nowhere">
                 <span aria-hidden="true">&laquo;&laquo;</span>
-                <span class="sr-only">First</span>
+                <span className="sr-only">First</span>
               </a>
             </li>
-            <li
-              className={
-                this.state.page === 1 ? "page-item disabled" : "page-item"
-              }
-            >
-              <a
-                onClick={this.previouspage}
-                className="page-link"
-                href="#nowhere"
-              >
+            <li className={this.state.page === 1 ? "page-item disabled" : "page-item"}>
+              <a onClick={this.previouspage} className="page-link" href="#nowhere">
                 <span aria-hidden="true">&laquo;</span>
-                <span class="sr-only">Previous</span>
+                <span className="sr-only">Previous</span>
               </a>
             </li>
             <li className="page-item">
@@ -127,33 +115,21 @@ export default class Pager extends React.Component {
                 Page {this.state.page} of {this.state.pagecount}
               </label>
             </li>
-            <li
-              className={
-                this.state.page === this.state.pagecount
-                  ? "page-item disabled"
-                  : "page-item"
-              }
-            >
+            <li className={this.state.page === this.state.pagecount? "page-item disabled": "page-item"}>
               <a onClick={this.nextpage} className="page-link" href="#nowhere">
                 <span aria-hidden="true">&raquo;</span>
-                <span class="sr-only">Next</span>
+                <span className="sr-only">Next</span>
               </a>
             </li>
-            <li
-              className={
-                this.state.page === this.state.pagecount
-                  ? "page-item disabled"
-                  : "page-item"
-              }
-            >
+            <li className={this.state.page === this.state.pagecount? "page-item disabled": "page-item"}>
               <a onClick={this.lastpage} className="page-link" href="#nowhere">
                 <span aria-hidden="true">&raquo;&raquo;</span>
-                <span class="sr-only">Last</span>
+                <span className="sr-only">Last</span>
               </a>
             </li>
           </ul>
         </nav>
-      </div>
+      </span>
     );
   }
 }

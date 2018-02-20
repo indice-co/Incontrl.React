@@ -16,6 +16,8 @@ export default class TransactionList extends React.Component {
       pagesize: 20,
       page: 1,
       count: 0,
+      paymentOptions: [],
+      selectedOption:"",
       culture: this.props.culture
     };
 
@@ -25,39 +27,68 @@ export default class TransactionList extends React.Component {
   }
 
   componentDidMount() {
-    this.search();
+    this.loadPaymentOptions();
   }
 
-  search() {
+  loadPaymentOptions() {
     var component = this;
     var xhr = new XMLHttpRequest();
     xhr.addEventListener("readystatechange", function() {
       if (xhr.readyState === 4) {
         if (xhr.status === 200) {
-          var documents_response = JSON.parse(xhr.response);
+          var response = JSON.parse(xhr.response);
+          if(response.items.length>0) {
           component.setState({
-            documents: documents_response.items,
-            count: documents_response.count
+            paymentOptions: response.items,
+            selectedOption: response.items[0].id
+          },()=> {
+            component.search();
           });
         } else {
+          component.setState({ paymentOptions: [], selectedOption: "" });
+        }
+        } else {
           // do some error handling here!
-          component.setState({ documents: null, count: 0, pagecount: 0 });
+          component.setState({ paymentOptions: [], selectedOption: "" });
         }
       }
     });
-    var doctype = `?Filter.TypeId=${component.state.doctypeid}`;
-    var sort = `&sort=${component.state.sortfield}${
-      component.state.sortdir === "asc" ? "+" : "-"
-    }`;
-    var size = `&size=${component.state.pagesize}`;
-    var page = `&page=${component.state.page}`;
-    var culture = `&culture=${component.state.culture}`;
-    var url = `https://${component.state.environment}.incontrl.io/subscriptions/${component.state.subscriptionid}/documents${doctype}${page}${size}${sort}${culture}`;
+
+    var url = `https://${component.state.environment}.incontrl.io/subscriptions/${component.state.subscriptionid}/payment-options?Page=1&Size=1000`;
     xhr.open("GET", url);
-    xhr.setRequestHeader(
-      "Authorization",
-      "Bearer " + component.state.access_token
-    );
+    xhr.setRequestHeader("Authorization","Bearer " + component.state.access_token);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.setRequestHeader("Cache-Control", "no-cache");
+    xhr.send();
+  }
+
+  search() {
+    if(!this.state.selectedOption || this.state.selectedOption===""){
+      return;
+    }
+    var component = this;
+    var xhr = new XMLHttpRequest();
+    xhr.addEventListener("readystatechange", function() {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          var response = JSON.parse(xhr.response);
+          component.setState({
+            transactions: response.items,
+            count: response.count
+          });
+        } else {
+          // do some error handling here!
+          component.setState({ transactions: null, count: 0, pagecount: 0 });
+        }
+      }
+    });
+    var page = `?page=${component.state.page}`;
+    var sort = `&sort=${component.state.sortfield}${component.state.sortdir === "asc" ? "+" : "-"}`;
+    var size = `&size=${component.state.pagesize}`;
+    var culture = `&culture=${component.state.culture}`;
+    var url = `https://${component.state.environment}.incontrl.io/subscriptions/${component.state.subscriptionid}/payment-options/${component.state.selectedOption}/transactions${page}${size}${sort}${culture}`;
+    xhr.open("GET", url);
+    xhr.setRequestHeader("Authorization","Bearer " + component.state.access_token);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.setRequestHeader("Cache-Control", "no-cache");
     xhr.send();
@@ -65,9 +96,7 @@ export default class TransactionList extends React.Component {
 
   addRootPath(permaLink) {
     var culture = `?culture=${this.state.culture}`;
-    return `https://${
-      this.state.environment
-    }.incontrl.io${permaLink}${culture}`;
+    return `https://${this.state.environment}.incontrl.io${permaLink}${culture}`;
   }
 
   sort(field, e) {
@@ -94,45 +123,56 @@ export default class TransactionList extends React.Component {
     );
   }
 
+  selectOption(e) {
+
+  }
+
   render() {
     var component = this;
     return (
       <div>
-        <Pager
-          onChange={this.pageChanged}
-          pagesize={this.state.pagesize}
-          page={this.state.page}
-          count={this.state.count}/>
+        <span>
+          Payment option : 
+          <select onChange={this.selectOption} value={this.state.selectedOption}>
+            {
+              this.state.paymentOptions.map(function(po) {
+                return <option key={po.id} value={po.id}>{po.name}</option>
+              })
+            }
+          </select>&nbsp;
+          <Pager
+            onChange={this.pageChanged}
+            pagesize={this.state.pagesize}
+            page={this.state.page}
+            count={this.state.count}
+          />
+        </span>
         <hr />
         <div className="table-responsive">
           <table className="table table-hover table-sm grid" cellPadding="4">
             <thead>
               <tr>
-                {Cells.headerCell("Αριθμός","numberPrintable",component.state.sortField,component.sort)}
-                {Cells.headerCell("Ονοματεπώνυμο","recipient.contact.lastName",component.state.sortField,component.sort)}
-                {Cells.headerCell("Ημερομηνία","date",component.state.sortField,component.sort)}
-                {Cells.headerCell("Κατάσταση","status",component.state.sortField,component.sort)}
-                {Cells.headerCell("Κωδ.Πληρωμής","paymentCode",component.state.sortField,component.sort)}
-                {Cells.headerCell("Νόμισμα","currencyCode",component.state.sortField,component.sort)}
-                {Cells.headerCell("Αξία","subTotal",component.state.sortField,component.sort)}
-                {Cells.headerCell("ΦΠΑ","totalSalesTax",component.state.sortField,component.sort)}
-                {Cells.headerCell("Συνολική αξία","total",component.state.sortField,component.sort)}
+                {Cells.headerCell("UniqueId","uniqueId",component.state.sortField,component.sort)}
+                {Cells.headerCell("Type","type",component.state.sortField,component.sort)}
+                {Cells.headerCell("Completed","completed",component.state.sortField,component.sort)}
+                {Cells.headerCell("Merchant Reference","merchantReference",component.state.sortField,component.sort)}
+                {Cells.headerCell("Description","description",component.state.sortField,component.sort)}
+                {Cells.headerCell("Value","value",component.state.sortField,component.sort)}
+                {Cells.headerCell("Balance","balance",component.state.sortField,component.sort)}
               </tr>
             </thead>
             <tbody>
-              {this.state.documents
-                ? this.state.documents.map(function(doc) {
+              {this.state.transactions
+                ? this.state.transactions.map(function(transaction) {
                     return (
-                      <tr key={doc.id}>
-                        {Cells.linkCell(doc.numberPrintable,undefined,component.addRootPath(doc.permaLink),"__new")}
-                        {Cells.linkCell(`${doc.recipient.contact.lastName} ${doc.recipient.contact.firstName}`,undefined,component.userlinkfunc(doc.id),"__new")}
-                        {Cells.dateCell(doc.date, component.state.culture)}
-                        {Cells.statusCell(doc.status)}
-                        {Cells.cell(doc.paymentCode)}
-                        {Cells.cell(doc.currencyCode)}
-                        {Cells.numericCell(doc.subTotal,doc.currencyCode,component.state.culture)}
-                        {Cells.numericCell(doc.totalSalesTax,doc.currencyCode,component.state.culture)}
-                        {Cells.moneyCell(doc.total,doc.currencyCode,component.state.culture)}
+                      <tr key={transaction.id}>
+                        {Cells.cell(transaction.uniqueId)}
+                        {Cells.statusCell(transaction.type)}
+                        {Cells.dateCell(transaction.completed, component.state.culture)}
+                        {Cells.cell(transaction.merchantReference)}
+                        {Cells.cell(transaction.description)}
+                        {Cells.moneyCell(transaction.value.amount,transaction.value.currency,component.state.culture)}
+                        {Cells.moneyCell(transaction.balance.amount,transaction.balance.currency,component.state.culture)}
                       </tr>
                     );
                   })

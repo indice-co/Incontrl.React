@@ -32,7 +32,7 @@ class App extends Component {
   getToken() {
     var component = this;
     // ..
-    var data = "grant_type=client_credentials&scope=core&=";
+    var data = "grant_type=client_credentials&scope=core core:banking";
     var xhr = new XMLHttpRequest();
     xhr.withCredentials = false;
     xhr.addEventListener("readystatechange", function () {
