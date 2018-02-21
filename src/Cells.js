@@ -1,19 +1,25 @@
 import React from "react";
 
 export default class Cells {
-
   static headerCell(label, sortfield, currentSort, sort) {
-    var _class = "sortable ";
+    var _class = "";
     if (currentSort && sortfield.toLowerCase() === currentSort.toLowerCase()) {
-      _class = this.state.sortdir === "asc"? "sortable sort-asc": "sortable sort-desc";
+      _class =
+        this.state.sortdir === "asc"
+          ? "sortable sort-asc"
+          : "sortable sort-desc";
     }
 
     return (
       <th className={_class}>
         <div>
-          <a href="" onClick={sort.bind(this,sortfield)}>
+          {sortfield ? (
+            <a href="" onClick={sort.bind(this, sortfield)}>
+              <span>{label}</span>
+            </a>
+          ) : (
             <span>{label}</span>
-          </a>
+          )}
         </div>
       </th>
     );
@@ -41,7 +47,9 @@ export default class Cells {
     return (
       <td className={className}>
         <span className={className}>
-        <a href={href} target={target}>{value}</a>
+          <a href={href} target={target}>
+            {value}
+          </a>
         </span>
       </td>
     );
@@ -67,10 +75,10 @@ export default class Cells {
   static numericCell(value, currencyCode, culture) {
     if (!value) value = 0;
     var numberFormatter = new Intl.NumberFormat(culture, {
-        currency: currencyCode,
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      });
+      currency: currencyCode,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
     return this.cell(numberFormatter.format(value), "numeric");
   }
 

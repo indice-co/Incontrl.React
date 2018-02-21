@@ -54,7 +54,11 @@ export default class DocumentList extends React.Component {
     var size = `&size=${component.state.pagesize}`;
     var page = `&page=${component.state.page}`;
     var culture = `&culture=${component.state.culture}`;
-    var url = `https://${component.state.environment}.incontrl.io/subscriptions/${component.state.subscriptionid}/documents${doctype}${page}${size}${sort}${culture}`;
+    var url = `https://${
+      component.state.environment
+    }.incontrl.io/subscriptions/${
+      component.state.subscriptionid
+    }/documents${doctype}${page}${size}${sort}${culture}`;
     console.log(url);
     xhr.open("GET", url);
     xhr.setRequestHeader(
@@ -97,6 +101,18 @@ export default class DocumentList extends React.Component {
     );
   }
 
+  getProduct(doc) {
+    var name = "";
+    if (doc.lines && doc.lines.length > 0) {
+      if (doc.lines[0].product) {
+        name = doc.lines[0].product.name;
+      } else {
+        name = doc.lines[0].description;
+      }
+    }
+    return name;
+  }
+
   render() {
     var component = this;
     return (
@@ -105,21 +121,68 @@ export default class DocumentList extends React.Component {
           onChange={this.pageChanged}
           pagesize={this.state.pagesize}
           page={this.state.page}
-          count={this.state.count}/>
+          count={this.state.count}
+        />
         <hr />
         <div className="table-responsive">
           <table className="table table-hover table-sm grid" cellPadding="4">
             <thead>
               <tr>
-                {Cells.headerCell("Αριθμός","numberPrintable",component.state.sortField,component.sort)}
-                {Cells.headerCell("Ονοματεπώνυμο","recipient.contact.lastName",component.state.sortField,component.sort)}
-                {Cells.headerCell("Ημερομηνία","date",component.state.sortField,component.sort)}
-                {Cells.headerCell("Κατάσταση","status",component.state.sortField,component.sort)}
-                {Cells.headerCell("Κωδ.Πληρωμής","paymentCode",component.state.sortField,component.sort)}
-                {Cells.headerCell("Νόμισμα","currencyCode",component.state.sortField,component.sort)}
-                {Cells.headerCell("Αξία","subTotal",component.state.sortField,component.sort)}
-                {Cells.headerCell("ΦΠΑ","totalSalesTax",component.state.sortField,component.sort)}
-                {Cells.headerCell("Συνολική αξία","total",component.state.sortField,component.sort)}
+                {Cells.headerCell(
+                  "Αριθμός",
+                  "numberPrintable",
+                  component.state.sortField,
+                  component.sort
+                )}
+                {Cells.headerCell(
+                  "Ονοματεπώνυμο",
+                  "recipient.contact.lastName",
+                  component.state.sortField,
+                  component.sort
+                )}
+                {Cells.headerCell(
+                  "Ημερομηνία",
+                  "date",
+                  component.state.sortField,
+                  component.sort
+                )}
+                {Cells.headerCell(
+                  "Κατάσταση",
+                  "status",
+                  component.state.sortField,
+                  component.sort
+                )}
+                {Cells.headerCell(
+                  "Κωδ.Πληρωμής",
+                  "paymentCode",
+                  component.state.sortField,
+                  component.sort
+                )}
+                {Cells.headerCell("Προϊόν / Υπηρεσία")}
+                {Cells.headerCell(
+                  "Νόμισμα",
+                  "currencyCode",
+                  component.state.sortField,
+                  component.sort
+                )}
+                {Cells.headerCell(
+                  "Αξία",
+                  "subTotal",
+                  component.state.sortField,
+                  component.sort
+                )}
+                {Cells.headerCell(
+                  "ΦΠΑ",
+                  "totalSalesTax",
+                  component.state.sortField,
+                  component.sort
+                )}
+                {Cells.headerCell(
+                  "Συνολική αξία",
+                  "total",
+                  component.state.sortField,
+                  component.sort
+                )}
               </tr>
             </thead>
             <tbody>
@@ -127,15 +190,40 @@ export default class DocumentList extends React.Component {
                 ? this.state.documents.map(function(doc) {
                     return (
                       <tr key={doc.id}>
-                        {Cells.linkCell(doc.numberPrintable,undefined,component.addRootPath(doc.permaLink),"__new")}
-                        {Cells.linkCell(`${doc.recipient.contact.lastName} ${doc.recipient.contact.firstName}`,undefined,component.userlinkfunc(doc.id),"__new")}
+                        {Cells.linkCell(
+                          doc.numberPrintable,
+                          undefined,
+                          component.addRootPath(doc.permaLink),
+                          "__new"
+                        )}
+                        {Cells.linkCell(
+                          `${doc.recipient.contact.lastName} ${
+                            doc.recipient.contact.firstName
+                          }`,
+                          undefined,
+                          component.userlinkfunc(doc.id),
+                          "__new"
+                        )}
                         {Cells.dateCell(doc.date, component.state.culture)}
                         {Cells.statusCell(doc.status)}
                         {Cells.cell(doc.paymentCode)}
+                        {Cells.cell(component.getProduct(doc))}
                         {Cells.cell(doc.currencyCode)}
-                        {Cells.numericCell(doc.subTotal,doc.currencyCode,component.state.culture)}
-                        {Cells.numericCell(doc.totalSalesTax,doc.currencyCode,component.state.culture)}
-                        {Cells.moneyCell(doc.total,doc.currencyCode,component.state.culture)}
+                        {Cells.numericCell(
+                          doc.subTotal,
+                          doc.currencyCode,
+                          component.state.culture
+                        )}
+                        {Cells.numericCell(
+                          doc.totalSalesTax,
+                          doc.currencyCode,
+                          component.state.culture
+                        )}
+                        {Cells.moneyCell(
+                          doc.total,
+                          doc.currencyCode,
+                          component.state.culture
+                        )}
                       </tr>
                     );
                   })
