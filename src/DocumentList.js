@@ -20,7 +20,9 @@ export default class DocumentList extends React.Component {
       culture: this.props.culture
     };
 
+    // eslint-disable-next-line
     this.linkfunc = eval(this.props.link);
+    // eslint-disable-next-line
     this.userlinkfunc = eval(this.props.userlink);
     this.sort = this.sort.bind(this);
     this.search = this.search.bind(this);
