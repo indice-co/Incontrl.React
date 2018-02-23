@@ -1,7 +1,7 @@
 import React from "react";
 
 export default class Cells {
-  static headerCell(label, sortfield, currentSort, sort) {
+  static headerCell(label, sortfield, currentSort, sort, additionalClass) {
     var _class = "";
     if (currentSort && sortfield.toLowerCase() === currentSort.toLowerCase()) {
       _class =
@@ -11,7 +11,7 @@ export default class Cells {
     }
 
     return (
-      <th className={_class}>
+      <th className={_class + " " + additionalClass}>
         <div>
           {sortfield ? (
             <a href="" onClick={sort.bind(this, sortfield)}>
@@ -44,15 +44,23 @@ export default class Cells {
   }
 
   static linkCell(value, className, href, target) {
-    return (
-      <td className={className}>
-        <span className={className}>
-          <a href={href} target={target}>
-            {value}
-          </a>
-        </span>
-      </td>
-    );
+    if (href) {
+      return (
+        <td className={className}>
+          <span className={className}>
+            <a href={href} target={target}>
+              {value}
+            </a>
+          </span>
+        </td>
+      );
+    } else {
+      return (
+        <td className={className}>
+          <span className={className}>{value}</span>
+        </td>
+      );
+    }
   }
 
   static dateCell(value, culture) {

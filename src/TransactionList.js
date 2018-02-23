@@ -21,7 +21,7 @@ export default class TransactionList extends React.Component {
       culture: this.props.culture
     };
     // eslint-disable-next-line
-    this.linkfunc = eval(this.props.link);
+    this.linkfunc = eval(this.props.link ? this.props.link : "doc => ``");
     this.sort = this.sort.bind(this);
     this.search = this.search.bind(this);
     this.pageChanged = this.pageChanged.bind(this);
