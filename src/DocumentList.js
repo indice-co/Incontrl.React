@@ -20,6 +20,7 @@ export default class DocumentList extends React.Component {
       culture: this.props.culture
     };
 
+    this.linkfunc = eval(this.props.link);
     this.userlinkfunc = eval(this.props.userlink);
     this.sort = this.sort.bind(this);
     this.search = this.search.bind(this);
@@ -54,11 +55,7 @@ export default class DocumentList extends React.Component {
     var size = `&size=${component.state.pagesize}`;
     var page = `&page=${component.state.page}`;
     var culture = `&culture=${component.state.culture}`;
-    var url = `https://${
-      component.state.environment
-    }.incontrl.io/subscriptions/${
-      component.state.subscriptionid
-    }/documents${doctype}${page}${size}${sort}${culture}`;
+    var url = `https://${component.state.environment}.incontrl.io/subscriptions/${component.state.subscriptionid}/documents${doctype}${page}${size}${sort}${culture}`;
     console.log(url);
     xhr.open("GET", url);
     xhr.setRequestHeader(
@@ -201,7 +198,7 @@ export default class DocumentList extends React.Component {
                             doc.recipient.contact.firstName
                           }`,
                           undefined,
-                          component.userlinkfunc(doc.id),
+                          component.userlinkfunc(doc),
                           "__new"
                         )}
                         {Cells.dateCell(doc.date, component.state.culture)}

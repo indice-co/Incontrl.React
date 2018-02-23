@@ -20,7 +20,7 @@ export default class TransactionList extends React.Component {
       selectedOption:"",
       culture: this.props.culture
     };
-
+    this.linkfunc = eval(this.props.link);
     this.sort = this.sort.bind(this);
     this.search = this.search.bind(this);
     this.pageChanged = this.pageChanged.bind(this);

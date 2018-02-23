@@ -16,7 +16,8 @@ class App extends Component {
       environment: this.props.environment,
       debug: this.props.debug,
       culture: this.props.culture,
-      userlink: this.props.userlink
+      userlink: this.props.userlink,
+      link: this.props.link
     };
     
     if (!this.state.environment) {
@@ -85,6 +86,7 @@ class App extends Component {
         doctypeid={this.state.doctypeid}
         environment={this.state.environment}
         culture={this.state.culture}
+        link={this.state.link}
         userlink={this.state.userlink}/>);
     } else if (this.state.view === 'transactions') {
       return (<TransactionList
@@ -93,6 +95,7 @@ class App extends Component {
         paymentoptionid={this.state.paymentoptionid}
         environment={this.state.environment}
         culture={this.state.culture}
+        link={this.state.link}
         userlink={this.state.userlink}/>);
     } else {
       return (
