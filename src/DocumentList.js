@@ -150,14 +150,11 @@ export default class DocumentList extends React.Component {
                           component.addRootPath(doc.permaLink),
                           "__new"
                         )}
-                        {Cells.linkCell(
-                          `${doc.recipient.contact.lastName} ${
-                            doc.recipient.contact.firstName
-                          }`,
+                        {doc.recipient.contact ? Cells.linkCell(`${doc.recipient.contact.lastName} ${doc.recipient.contact.firstName}`,
                           undefined,
                           component.userlinkfunc(doc),
                           "__new"
-                        )}
+                        ) : Cells.cell("")}
                         {Cells.dateCell(doc.date, component.state.culture)}
                         {Cells.statusCell(doc.status)}
                         {Cells.cell(doc.paymentCode)}
