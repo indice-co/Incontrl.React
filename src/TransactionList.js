@@ -1,6 +1,7 @@
 import React from "react";
 import Cells from "./Cells";
 import Pager from "./Pager";
+import HeaderCell from "./HeaderCell";
 
 // some comment to test my CI process
 export default class TransactionList extends React.Component {
@@ -153,13 +154,13 @@ export default class TransactionList extends React.Component {
           <table className="table table-hover table-sm grid" cellPadding="4">
             <thead>
               <tr>
-                {Cells.headerCell("UniqueId","uniqueId",component.state.sortField,component.sort)}
-                {Cells.headerCell("Type","type",component.state.sortField,component.sort)}
-                {Cells.headerCell("Completed","completed",component.state.sortField,component.sort)}
-                {Cells.headerCell("Merchant Reference","merchantReference",component.state.sortField,component.sort)}
-                {Cells.headerCell("Description","description",component.state.sortField,component.sort)}
-                {Cells.headerCell("Value","value",component.state.sortField,component.sort)}
-                {Cells.headerCell("Balance","balance",component.state.sortField,component.sort)}
+                <HeaderCell label="Αριθμός" sortfield="UniqueId" currentsort={component.state.sortfield} currentdir={component.state.sortdir} onSort={component.sort} />
+                <HeaderCell label="Τύπος συναλλαγής" sortfield="Τype" currentsort={component.state.sortfield} currentdir={component.state.sortdir} onSort={component.sort} />
+                <HeaderCell label="Ημερομηνία" sortfield="Completed" currentsort={component.state.sortfield} currentdir={component.state.sortdir} onSort={component.sort} />
+                <HeaderCell label="Κωδικός αναφοράς" sortfield="merchantReference" currentsort={component.state.sortfield} currentdir={component.state.sortdir} onSort={component.sort} />
+                <HeaderCell label="Περιγραφή" sortfield="Description" currentsort={component.state.sortfield} currentdir={component.state.sortdir} onSort={component.sort} />
+                <HeaderCell label="Αξια" sortfield="Value" styleclass="numeric" currentsort={component.state.sortfield} currentdir={component.state.sortdir} onSort={component.sort} />
+                <HeaderCell label="Υπόλοιπο" sortfield="Balance" styleclass="numeric" currentsort={component.state.sortfield} currentdir={component.state.sortdir} onSort={component.sort} />
               </tr>
             </thead>
             <tbody>

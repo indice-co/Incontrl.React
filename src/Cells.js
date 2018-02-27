@@ -1,33 +1,6 @@
 import React from "react";
 
-export default class Cells {
-  static headerCell(label, sortfield, currentSort, sort, additionalClass) {
-    var _class = sortfield ? "sortable" : "";
-    if(!additionalClass) {
-      additionalClass = "";
-    }
-    if (currentSort && sortfield.toLowerCase() === currentSort.toLowerCase()) {
-      _class =
-        this.state.sortdir === "asc"
-          ? "sortable sort-asc"
-          : "sortable sort-desc";
-    }
-
-    return (
-      <th className={_class + " " + additionalClass}>
-        <div>
-          {sortfield ? (
-            <a href="" onClick={sort.bind(this, sortfield)}>
-              <span>{label}</span>
-            </a>
-          ) : (
-            <span>{label}</span>
-          )}
-        </div>
-      </th>
-    );
-  }
-
+export default class Cells {  
   static cell(value, className) {
     return (
       <td className={className}>

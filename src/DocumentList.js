@@ -1,5 +1,6 @@
 import React from "react";
 import Cells from "./Cells";
+import HeaderCell from "./HeaderCell";
 import Pager from "./Pager";
 
 // some comment to test my CI process
@@ -80,7 +81,7 @@ export default class DocumentList extends React.Component {
     e.preventDefault();
     var dir = "asc";
     if (field.toLowerCase() === this.state.sortfield.toLowerCase()) {
-      dir = this.state.sortdir === "asc" ? "desc" : "asc";
+       dir = this.state.sortdir === "asc" ? "desc" : "asc";
     }
     this.setState({ sortfield: field, sortdir: dir }, () => {
       console.log("sort method: " + field + " " + dir);
@@ -127,16 +128,16 @@ export default class DocumentList extends React.Component {
           <table className="table table-hover table-sm grid" cellPadding="4">
             <thead>
               <tr>
-                {Cells.headerCell("Αριθμός","numberPrintable",component.state.sortField,component.sort)}
-                {Cells.headerCell("Ονοματεπώνυμο","recipient.contact.lastName",component.state.sortField,component.sort)}
-                {Cells.headerCell("Ημερομηνία","date",component.state.sortField,component.sort)}
-                {Cells.headerCell("Κατάσταση","status",component.state.sortField,component.sort)}
-                {Cells.headerCell("Κωδ.Πληρωμής","paymentCode",component.state.sortField,component.sort)}
-                {Cells.headerCell("Προϊόν / Υπηρεσία")}
-                {Cells.headerCell("Νόμισμα","currencyCode",component.state.sortField,component.sort)}
-                {Cells.headerCell("Αξία","subTotal",component.state.sortField,component.sort,"numeric")}
-                {Cells.headerCell("ΦΠΑ","totalSalesTax",component.state.sortField,component.sort,"numeric")}
-                {Cells.headerCell("Συνολική αξία","total",component.state.sortField,component.sort,"numeric")}
+                <HeaderCell label="Αριθμός" sortfield="numberPrintable" currentsort={component.state.sortfield} currentdir={component.state.sortdir} onSort={component.sort} />
+                <HeaderCell label="Ονοματεπώνυμο" sortfield="recipient.contact.lastName" currentsort={component.state.sortfield} currentdir={component.state.sortdir}  onSort={component.sort} />
+                <HeaderCell label="Ημερομηνία" sortfield="date" currentsort={component.state.sortfield} currentdir={component.state.sortdir}  onSort={component.sort} />
+                <HeaderCell label="Κατάσταση" sortfield="status" currentsort={component.state.sortfield} currentdir={component.state.sortdir}  onSort={component.sort} />
+                <HeaderCell label="Κωδ.Πληρωμής" sortfield="paymentCode" currentsort={component.state.sortfield} currentdir={component.state.sortdir}  onSort={component.sort} />
+                <HeaderCell label="Προϊόν / Υπηρεσία" />
+                <HeaderCell label="Νόμισμα" sortfield="currencyCode" currentsort={component.state.sortfield} currentdir={component.state.sortdir}  onSort={component.sort} />
+                <HeaderCell label="Αξία" sortfield="subTotal" styleclass="numeric" currentsort={component.state.sortfield} currentdir={component.state.sortdir}  onSort={component.sort} />
+                <HeaderCell label="ΦΠΑ" sortfield="totalSalesTax" styleclass="numeric" currentsort={component.state.sortfield} currentdir={component.state.sortdir}  onSort={component.sort} />
+                <HeaderCell label="Συνολική αξία" sortfield="total" styleclass="numeric" currentsort={component.state.sortfield} currentdir={component.state.sortdir} onSort={component.sort} />
               </tr>
             </thead>
             <tbody>
