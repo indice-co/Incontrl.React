@@ -2,7 +2,10 @@ import React from "react";
 
 export default class Cells {
   static headerCell(label, sortfield, currentSort, sort, additionalClass) {
-    var _class = "";
+    var _class = sortfield ? "sortable" : "";
+    if(!additionalClass) {
+      additionalClass = "";
+    }
     if (currentSort && sortfield.toLowerCase() === currentSort.toLowerCase()) {
       _class =
         this.state.sortdir === "asc"
