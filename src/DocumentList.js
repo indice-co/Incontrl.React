@@ -326,36 +326,16 @@ export default class DocumentList extends React.Component {
                             className={`status-${doc.status.toLowerCase()}`}
                           />
                         ) : (
-                          <SelectCell
-                            value={doc.status}
-                            options={component.statusoptions}
-                            onChange={component.statusChangeHandler.bind(
-                              component,
-                              doc
-                            )}
-                            onCancel={component.cancelStatusChangeHandler.bind(
-                              component,
-                              doc
-                            )}
-                          />
+                          <SelectCell value={doc.status} options={component.statusoptions}
+                            onChange={component.statusChangeHandler.bind(component,doc)}
+                            onCancel={component.cancelStatusChangeHandler.bind(component,doc)} />
                         )}
                         <TextCell value={doc.paymentCode} />
                         <TextCell value={component.getProduct(doc)} />
                         <TextCell value={doc.currencyCode} />
-                        <TextCell
-                          value={component.numberFormatter.format(doc.subTotal)}
-                          className="numeric"
-                        />
-                        <TextCell
-                          value={component.numberFormatter.format(
-                            doc.totalSalesTax
-                          )}
-                          className="numeric"
-                        />
-                        <TextCell
-                          value={component.numberFormatter.format(doc.total)}
-                          className="numeric"
-                        />
+                        <TextCell value={component.numberFormatter.format(doc.subTotal)} className="numeric" />
+                        <TextCell value={component.numberFormatter.format(doc.totalSalesTax)} className="numeric" />
+                        <TextCell value={component.numberFormatter.format(doc.total)} className="numeric" />
                       </tr>
                     );
                   })
