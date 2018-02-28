@@ -24,7 +24,7 @@ export default class DocumentList extends React.Component {
     };
     this.environment = this.props.environment;
     this.subscriptionid = this.props.subscriptionid;
-    this.culture = this.props.culture;
+    this.culture = this.props.culture || "el-GR";
     // eslint-disable-next-line
     this.linkfunc = eval(this.props.link ? this.props.link : "doc => ``");
     // eslint-disable-next-line
@@ -85,23 +85,14 @@ export default class DocumentList extends React.Component {
       }
     });
     var doctype = `?Filter.TypeId=${component.state.doctypeid}`;
-    var sort = `&sort=${component.state.sortfield}${
-      component.state.sortdir === "asc" ? "+" : "-"
-    }`;
+    var sort = `&sort=${component.state.sortfield}${component.state.sortdir === "asc" ? "+" : "-"}`;
     var size = `&size=${component.state.pagesize}`;
     var page = `&page=${component.state.page}`;
     var culture = `&culture=${component.state.culture}`;
-    var url = `https://${
-      component.environment
-    }.incontrl.io/subscriptions/${
-      component.subscriptionid
-    }/documents${doctype}${page}${size}${sort}${culture}`;
+    var url = `https://${component.environment}.incontrl.io/subscriptions/${component.subscriptionid}/documents${doctype}${page}${size}${sort}${culture}`;
     console.log(url);
     xhr.open("GET", url);
-    xhr.setRequestHeader(
-      "Authorization",
-      "Bearer " + component.state.access_token
-    );
+    xhr.setRequestHeader("Authorization","Bearer " + component.state.access_token);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.setRequestHeader("Cache-Control", "no-cache");
     xhr.send();
@@ -160,10 +151,7 @@ export default class DocumentList extends React.Component {
   statusChangeHandler(doc, e) {
     console.log("statusChangeHandler " + doc.id);
     if (window.confirm(`Change document status to : ${e.target.value} ?`)) {
-      if(this.changeStatus(doc, e.target.value)) {
-        alert("status change successfull");
-        this.search();
-      }
+      this.changeStatus(doc, e.target.value);
     }
     this.setState({
       editdocid: null
@@ -176,13 +164,15 @@ export default class DocumentList extends React.Component {
     xhr.addEventListener("readystatechange", function() {
       if (xhr.readyState === 4) {
         if (xhr.status === 200) {
-          return true;
+          doc.status = newStatus;
+          alert(`Status changed to ${newStatus}!`);
+          component.search();
         } else if(xhr.status === 400 && !force) {
           if(window.confirm(`Change document status to : ${newStatus} is not allowed - do you want to force the status change ?`)) {
             return component.changeStatus(doc, newStatus, true);
           }
         } else {
-          return false;
+          alert(`Failed to change to status ${newStatus}!`);
         }
       }
     });
