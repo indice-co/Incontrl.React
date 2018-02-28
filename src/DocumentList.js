@@ -1,5 +1,4 @@
 import React from "react";
-import Cells from "./Cells";
 import Pager from "./Pager";
 import HeaderCell from "./Cells/HeaderCell";
 import ButtonCell from "./Cells/ButtonCell";
@@ -21,9 +20,10 @@ export default class DocumentList extends React.Component {
       sortdir: "asc",
       pagesize: 20,
       page: 1,
-      count: 0,
+      count: 0
     };
-    
+    this.environment = this.props.environment;
+    this.subscriptionid = this.props.subscriptionid;
     this.culture = this.props.culture;
     // eslint-disable-next-line
     this.linkfunc = eval(this.props.link ? this.props.link : "doc => ``");
@@ -34,7 +34,7 @@ export default class DocumentList extends React.Component {
     this.sort = this.sort.bind(this);
     this.search = this.search.bind(this);
     this.pageChanged = this.pageChanged.bind(this);
-    
+
     this.statusoptions = [
       { value: "Draft", label: "Draft" },
       { value: "Issued", label: "Issued" },
@@ -75,11 +75,12 @@ export default class DocumentList extends React.Component {
           var documents_response = JSON.parse(xhr.response);
           component.setState({
             documents: documents_response.items,
-            count: documents_response.count
+            count: documents_response.count,
+            editdocid: null
           });
         } else {
           // do some error handling here!
-          component.setState({ documents: null, count: 0, pagecount: 0 });
+          component.setState({ documents: null, count: 0, pagecount: 0, editdocid: null });
         }
       }
     });
@@ -91,9 +92,9 @@ export default class DocumentList extends React.Component {
     var page = `&page=${component.state.page}`;
     var culture = `&culture=${component.state.culture}`;
     var url = `https://${
-      component.state.environment
+      component.environment
     }.incontrl.io/subscriptions/${
-      component.state.subscriptionid
+      component.subscriptionid
     }/documents${doctype}${page}${size}${sort}${culture}`;
     console.log(url);
     xhr.open("GET", url);
@@ -108,7 +109,9 @@ export default class DocumentList extends React.Component {
 
   addRootPath(permaLink) {
     var culture = `?culture=${this.culture}`;
-    return `https://${this.state.environment}.incontrl.io${permaLink}${culture}`;
+    return `https://${
+      this.state.environment
+    }.incontrl.io${permaLink}${culture}`;
   }
 
   sort(field, e) {
@@ -154,20 +157,50 @@ export default class DocumentList extends React.Component {
     });
   }
 
-  statusChangehandler(doc,e) {
-    console.log("statusChangehandler " + doc.id);
+  statusChangeHandler(doc, e) {
+    console.log("statusChangeHandler " + doc.id);
+    if (window.confirm(`Change document status to : ${e.target.value} ?`)) {
+      if(this.changeStatus(doc, e.target.value)) {
+        alert("status change successfull");
+        this.search();
+      }
+    }
     this.setState({
       editdocid: null
     });
   }
 
-  cancelStatusChangehandler(doc,e) {
-    console.log("cancelStatusChangehandler " +doc.id);
+  changeStatus(doc, newStatus, force = false) {
+    var component = this;
+    var xhr = new XMLHttpRequest();
+    xhr.addEventListener("readystatechange", function() {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          return true;
+        } else if(xhr.status === 400 && !force) {
+          if(window.confirm(`Change document status to : ${newStatus} is not allowed - do you want to force the status change ?`)) {
+            return component.changeStatus(doc, newStatus, true);
+          }
+        } else {
+          return false;
+        }
+      }
+    });
+
+    var url = `https://${component.environment}.incontrl.io/subscriptions/${component.subscriptionid}/documents/${doc.id}/status`;
+    xhr.open("PUT", url, true);
+    xhr.setRequestHeader("Authorization","Bearer " + component.state.access_token);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.setRequestHeader("Cache-Control", "no-cache");
+    xhr.send(JSON.stringify({ status: newStatus, force: force }));
+  }
+
+  cancelStatusChangeHandler(doc, e) {
+    console.log("cancelStatusChangeHandler " + doc.id);
     this.setState({
       editdocid: null
     });
   }
-
 
   isEditable(id) {
     return !(this.state.editdocid && this.state.editdocid === id);
@@ -266,31 +299,63 @@ export default class DocumentList extends React.Component {
                 ? this.state.documents.map(function(doc) {
                     return (
                       <tr key={doc.id}>
-                        <LinkCell value={doc.numberPrintable} href={component.addRootPath(doc.permaLink)} target="__new" />
-                        {doc.recipient.contact
-                          ?
-                          (<LinkCell value={`${doc.recipient.contact.lastName} ${doc.recipient.contact.firstName}`}
-                          href={component.userlinkfunc(doc)} target="__new" />)
-                          : 
-                          (<TextCell />)
-                        }
-                        <TextCell value={doc.date} className="date" />
-                        {component.isEditable(doc.id) ? 
-                          (<ButtonCell value={doc.status} onClick={component.statusButtonHandler.bind(component,doc)}
-                            className={`status-${doc.status.toLowerCase()}`}/>) 
-                          : 
-                          (<SelectCell
-                            value={doc.status} 
+                        <LinkCell
+                          value={doc.numberPrintable}
+                          href={component.addRootPath(doc.permaLink)}
+                          target="__new"
+                        />
+                        {doc.recipient.contact ? (
+                          <LinkCell
+                            value={`${doc.recipient.contact.lastName} ${
+                              doc.recipient.contact.firstName
+                            }`}
+                            href={component.userlinkfunc(doc)}
+                            target="__new"
+                          />
+                        ) : (
+                          <TextCell />
+                        )}
+                        <TextCell value={component.dateFormatter.format(Date.parse(doc.date))} className="date" />
+                        {component.isEditable(doc.id) ? (
+                          <ButtonCell
+                            value={doc.status}
+                            onClick={component.statusButtonHandler.bind(
+                              component,
+                              doc
+                            )}
+                            className={`status-${doc.status.toLowerCase()}`}
+                          />
+                        ) : (
+                          <SelectCell
+                            value={doc.status}
                             options={component.statusoptions}
-                            onChange={component.statusChangehandler.bind(component,doc)}
-                            onCancel={component.cancelStatusChangehandler.bind(component,doc)}/>)
-                        }
+                            onChange={component.statusChangeHandler.bind(
+                              component,
+                              doc
+                            )}
+                            onCancel={component.cancelStatusChangeHandler.bind(
+                              component,
+                              doc
+                            )}
+                          />
+                        )}
                         <TextCell value={doc.paymentCode} />
                         <TextCell value={component.getProduct(doc)} />
                         <TextCell value={doc.currencyCode} />
-                        <TextCell value={component.numberFormatter.format(doc.subTotal)} className="numeric" />
-                        <TextCell value={component.numberFormatter.format(doc.totalSalesTax)} className="numeric" />
-                        <TextCell value={component.numberFormatter.format(doc.total)} className="numeric" />
+                        <TextCell
+                          value={component.numberFormatter.format(doc.subTotal)}
+                          className="numeric"
+                        />
+                        <TextCell
+                          value={component.numberFormatter.format(
+                            doc.totalSalesTax
+                          )}
+                          className="numeric"
+                        />
+                        <TextCell
+                          value={component.numberFormatter.format(doc.total)}
+                          className="numeric"
+                        />
                       </tr>
                     );
                   })

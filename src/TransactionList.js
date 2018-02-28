@@ -1,7 +1,7 @@
 import React from "react";
-import Cells from "./Cells";
 import Pager from "./Pager";
 import HeaderCell from "./Cells/HeaderCell";
+import TextCell from "./Cells/TextCell";
 
 // some comment to test my CI process
 export default class TransactionList extends React.Component {
@@ -19,13 +19,18 @@ export default class TransactionList extends React.Component {
       count: 0,
       paymentOptions: [],
       selectedOption:"",
-      culture: this.props.culture
     };
+    this.culture = this.props.culture;
     // eslint-disable-next-line
     this.linkfunc = eval(this.props.link ? this.props.link : "doc => ``");
     this.sort = this.sort.bind(this);
     this.search = this.search.bind(this);
     this.pageChanged = this.pageChanged.bind(this);
+    this.numberFormatter = new Intl.NumberFormat(this.culture, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+    this.dateFormatter = new Intl.DateTimeFormat(this.culture);
   }
 
   componentDidMount() {
@@ -87,7 +92,7 @@ export default class TransactionList extends React.Component {
     var page = `?page=${component.state.page}`;
     var sort = `&sort=${component.state.sortfield}${component.state.sortdir === "asc" ? "+" : "-"}`;
     var size = `&size=${component.state.pagesize}`;
-    var culture = `&culture=${component.state.culture}`;
+    var culture = `&culture=${component.culture}`;
     var url = `https://${component.state.environment}.incontrl.io/subscriptions/${component.state.subscriptionid}/payment-options/${component.state.selectedOption}/transactions${page}${size}${sort}${culture}`;
     xhr.open("GET", url);
     xhr.setRequestHeader("Authorization","Bearer " + component.state.access_token);
@@ -97,7 +102,7 @@ export default class TransactionList extends React.Component {
   }
 
   addRootPath(permaLink) {
-    var culture = `?culture=${this.state.culture}`;
+    var culture = `?culture=${this.culture}`;
     return `https://${this.state.environment}.incontrl.io${permaLink}${culture}`;
   }
 
@@ -133,21 +138,23 @@ export default class TransactionList extends React.Component {
     var component = this;
     return (
       <div>
-        <span>
-          Payment option : 
-          <select onChange={this.selectOption} value={this.state.selectedOption}>
-            {
-              this.state.paymentOptions.map(function(po) {
-                return <option key={po.id} value={po.id}>{po.name}</option>
-              })
-            }
-          </select>&nbsp;
-          <Pager
-            onChange={this.pageChanged}
-            pagesize={this.state.pagesize}
-            page={this.state.page}
-            count={this.state.count}
-          />
+        <span className="toolbar">
+          <span className="payment-options">
+            Payment option : 
+            <select onChange={this.selectOption} value={this.state.selectedOption}>
+              {
+                this.state.paymentOptions.map(function(po) {
+                  return <option key={po.id} value={po.id}>{po.name}</option>
+                })
+              }
+            </select>&nbsp;
+            <Pager
+              onChange={this.pageChanged}
+              pagesize={this.state.pagesize}
+              page={this.state.page}
+              count={this.state.count}
+            />
+          </span>
         </span>
         <hr />
         <div className="table-responsive">
@@ -168,13 +175,13 @@ export default class TransactionList extends React.Component {
                 ? this.state.transactions.map(function(transaction) {
                     return (
                       <tr key={transaction.id}>
-                        {Cells.cell(transaction.uniqueId)}
-                        {Cells.statusCell(transaction.type)}
-                        {Cells.dateCell(transaction.completed, component.state.culture)}
-                        {Cells.cell(transaction.merchantReference)}
-                        {Cells.cell(transaction.description)}
-                        {Cells.moneyCell(transaction.value.amount,transaction.value.currency,component.state.culture)}
-                        {Cells.moneyCell(transaction.balance.amount,transaction.balance.currency,component.state.culture)}
+                        <TextCell value={transaction.uniqueId}/>
+                        <TextCell value={transaction.type}/>
+                        <TextCell value={component.dateFormatter.format(Date.parse(transaction.completed))}/>
+                        <TextCell value={transaction.merchantReference}/>
+                        <TextCell value={transaction.description}/>
+                        <TextCell value={component.numberFormatter.format(transaction.value.amount)} className="numeric" />
+                        <TextCell value={component.numberFormatter.format(transaction.balance.amount)} className="numeric" />
                       </tr>
                     );
                   })
