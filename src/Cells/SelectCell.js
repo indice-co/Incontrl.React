@@ -29,7 +29,7 @@ export default class SelectCell extends React.Component {
           <select onChange={this.onChange.bind(this)} className={this.className} value={this.value}>
             {
               this.options.map(function(option) {
-                return <option value={option.value}>{option.label}</option>
+                return <option key={option.value} value={option.value}>{option.label}</option>
               })
             }
           </select>&nbsp;

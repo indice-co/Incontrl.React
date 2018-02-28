@@ -6,22 +6,27 @@ export default class HeaderCell extends React.Component {
     this.state = {
         currentsort : props.currentsort,
         currentdir : props.currentdir,
-        className : props.sortfield ? "sortable" : ""
+        className : props.sortfield ? props.sortfield === props.currentsort ? props.currentdir === "asc" ? "sortable sort-asc": "sortable sort-desc" : "sortable" : ""
     };
     this.label = props.label;
     this.onSort = props.onSort;
     this.sortfield = props.sortfield;
-    this.styleclass = props.styleclass || "";
+    this.styleclass = props.className || "";
   }
 
   componentWillReceiveProps(nextProps) {
+    this.setState({className : this.calcClassNames(nextProps.currentsort, nextProps.currentdir)});
+  }
+
+  calcClassNames(nextSort,nextDir) {
     var _class = this.sortfield ? "sortable" : "";
-    if (nextProps.currentsort !== this.state.currentsort || nextProps.currentdir !== this.state.currentdir) {
-      if(nextProps.currentsort === this.sortfield) {
-        _class = nextProps.currentdir  === "asc" ? "sortable sort-asc": "sortable sort-desc";
+    if (nextSort !== this.state.currentsort || nextDir !== this.state.currentdir) {
+      if(nextSort === this.sortfield) {
+        _class = nextDir  === "asc" ? "sortable sort-asc": "sortable sort-desc";
       }
-      this.setState({className : `${_class} ${this.styleclass}`});
+      _class = `${_class} ${this.styleclass}`;
     }
+    return _class;
   }
 
   render() {
