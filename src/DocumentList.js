@@ -166,7 +166,7 @@ export default class DocumentList extends React.Component {
         if (xhr.status === 200) {
           doc.status = newStatus;
           alert(`Status changed to ${newStatus}!`);
-          component.search();
+          component.forceUpdate();
         } else if(xhr.status === 400 && !force) {
           if(window.confirm(`Change document status to : ${newStatus} is not allowed - do you want to force the status change ?`)) {
             return component.changeStatus(doc, newStatus, true);
