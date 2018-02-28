@@ -140,21 +140,22 @@ export default class TransactionList extends React.Component {
       <div>
         <span className="toolbar">
           <span className="payment-options">
-            Payment option : 
-            <select onChange={this.selectOption} value={this.state.selectedOption}>
-              {
-                this.state.paymentOptions.map(function(po) {
-                  return <option key={po.id} value={po.id}>{po.name}</option>
-                })
-              }
-            </select>&nbsp;
+              Payment option : 
+              <select onChange={this.selectOption} value={this.state.selectedOption}>
+                {
+                  this.state.paymentOptions.map(function(po) {
+                    return <option key={po.id} value={po.id}>{po.name}</option>
+                  })
+                }
+              </select>
+            </span>
             <Pager
               onChange={this.pageChanged}
               pagesize={this.state.pagesize}
               page={this.state.page}
               count={this.state.count}
             />
-          </span>
+          
         </span>
         <hr />
         <div className="table-responsive">
