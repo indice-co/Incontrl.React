@@ -1,7 +1,7 @@
 import React from "react";
 import Cells from "./Cells";
 import Pager from "./Pager";
-import HeaderCell from "./HeaderCell";
+import HeaderCell from "./Cells/HeaderCell";
 
 // some comment to test my CI process
 export default class TransactionList extends React.Component {

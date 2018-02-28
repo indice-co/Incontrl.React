@@ -1,7 +1,9 @@
 import React from "react";
 import Cells from "./Cells";
-import HeaderCell from "./HeaderCell";
 import Pager from "./Pager";
+import HeaderCell from "./Cells/HeaderCell";
+import ButtonCell from "./Cells/ButtonCell";
+import SelectCell from "./Cells/SelectCell";
 
 // some comment to test my CI process
 export default class DocumentList extends React.Component {
@@ -24,10 +26,22 @@ export default class DocumentList extends React.Component {
     // eslint-disable-next-line
     this.linkfunc = eval(this.props.link ? this.props.link : "doc => ``");
     // eslint-disable-next-line
-    this.userlinkfunc = eval(this.props.userlink ? this.props.userlink : "doc => ``");
+    this.userlinkfunc = eval(
+      this.props.userlink ? this.props.userlink : "doc => ``"
+    );
     this.sort = this.sort.bind(this);
     this.search = this.search.bind(this);
     this.pageChanged = this.pageChanged.bind(this);
+    
+    this.statusoptions = [
+      { value: "Draft", label: "Draft" },
+      { value: "Issued", label: "Issued" },
+      { value: "Overdue", label: "Overdue" },
+      { value: "Partial", label: "Partial" },
+      { value: "Paid", label: "Paid" },
+      { value: "Void", label: "Void" },
+      { value: "Deleted", label: "Deleted" }
+    ];
   }
 
   componentDidMount() {
@@ -58,7 +72,11 @@ export default class DocumentList extends React.Component {
     var size = `&size=${component.state.pagesize}`;
     var page = `&page=${component.state.page}`;
     var culture = `&culture=${component.state.culture}`;
-    var url = `https://${component.state.environment}.incontrl.io/subscriptions/${component.state.subscriptionid}/documents${doctype}${page}${size}${sort}${culture}`;
+    var url = `https://${
+      component.state.environment
+    }.incontrl.io/subscriptions/${
+      component.state.subscriptionid
+    }/documents${doctype}${page}${size}${sort}${culture}`;
     console.log(url);
     xhr.open("GET", url);
     xhr.setRequestHeader(
@@ -81,7 +99,7 @@ export default class DocumentList extends React.Component {
     e.preventDefault();
     var dir = "asc";
     if (field.toLowerCase() === this.state.sortfield.toLowerCase()) {
-       dir = this.state.sortdir === "asc" ? "desc" : "asc";
+      dir = this.state.sortdir === "asc" ? "desc" : "asc";
     }
     this.setState({ sortfield: field, sortdir: dir }, () => {
       console.log("sort method: " + field + " " + dir);
@@ -113,6 +131,32 @@ export default class DocumentList extends React.Component {
     return name;
   }
 
+  statusButtonHandler(doc, e) {
+    alert(doc.id);
+    this.setState({
+      editdocid: doc.id
+    });
+  }
+
+  statusChangehandler(doc,e) {
+    alert(doc.id);
+    this.setState({
+      editdocid: null
+    });
+  }
+
+  cancelStatusChangehandler(doc,e) {
+    alert(doc.id);
+    this.setState({
+      editdocid: null
+    });
+  }
+
+
+  isEditable(id) {
+    return !(this.state.editdocid && this.state.editdocid === id);
+  }
+
   render() {
     var component = this;
     return (
@@ -128,16 +172,73 @@ export default class DocumentList extends React.Component {
           <table className="table table-hover table-sm grid" cellPadding="4">
             <thead>
               <tr>
-                <HeaderCell label="Αριθμός" sortfield="numberPrintable" currentsort={component.state.sortfield} currentdir={component.state.sortdir} onSort={component.sort} />
-                <HeaderCell label="Ονοματεπώνυμο" sortfield="recipient.contact.lastName" currentsort={component.state.sortfield} currentdir={component.state.sortdir}  onSort={component.sort} />
-                <HeaderCell label="Ημερομηνία" sortfield="date" currentsort={component.state.sortfield} currentdir={component.state.sortdir}  onSort={component.sort} />
-                <HeaderCell label="Κατάσταση" sortfield="status" currentsort={component.state.sortfield} currentdir={component.state.sortdir}  onSort={component.sort} />
-                <HeaderCell label="Κωδ.Πληρωμής" sortfield="paymentCode" currentsort={component.state.sortfield} currentdir={component.state.sortdir}  onSort={component.sort} />
+                <HeaderCell
+                  label="Αριθμός"
+                  sortfield="numberPrintable"
+                  currentsort={component.state.sortfield}
+                  currentdir={component.state.sortdir}
+                  onSort={component.sort}
+                />
+                <HeaderCell
+                  label="Ονοματεπώνυμο"
+                  sortfield="recipient.contact.lastName"
+                  currentsort={component.state.sortfield}
+                  currentdir={component.state.sortdir}
+                  onSort={component.sort}
+                />
+                <HeaderCell
+                  label="Ημερομηνία"
+                  sortfield="date"
+                  currentsort={component.state.sortfield}
+                  currentdir={component.state.sortdir}
+                  onSort={component.sort}
+                />
+                <HeaderCell
+                  label="Κατάσταση"
+                  sortfield="status"
+                  currentsort={component.state.sortfield}
+                  currentdir={component.state.sortdir}
+                  onSort={component.sort}
+                />
+                <HeaderCell
+                  label="Κωδ.Πληρωμής"
+                  sortfield="paymentCode"
+                  currentsort={component.state.sortfield}
+                  currentdir={component.state.sortdir}
+                  onSort={component.sort}
+                />
                 <HeaderCell label="Προϊόν / Υπηρεσία" />
-                <HeaderCell label="Νόμισμα" sortfield="currencyCode" currentsort={component.state.sortfield} currentdir={component.state.sortdir}  onSort={component.sort} />
-                <HeaderCell label="Αξία" sortfield="subTotal" styleclass="numeric" currentsort={component.state.sortfield} currentdir={component.state.sortdir}  onSort={component.sort} />
-                <HeaderCell label="ΦΠΑ" sortfield="totalSalesTax" styleclass="numeric" currentsort={component.state.sortfield} currentdir={component.state.sortdir}  onSort={component.sort} />
-                <HeaderCell label="Συνολική αξία" sortfield="total" styleclass="numeric" currentsort={component.state.sortfield} currentdir={component.state.sortdir} onSort={component.sort} />
+                <HeaderCell
+                  label="Νόμισμα"
+                  sortfield="currencyCode"
+                  currentsort={component.state.sortfield}
+                  currentdir={component.state.sortdir}
+                  onSort={component.sort}
+                />
+                <HeaderCell
+                  label="Αξία"
+                  sortfield="subTotal"
+                  styleclass="numeric"
+                  currentsort={component.state.sortfield}
+                  currentdir={component.state.sortdir}
+                  onSort={component.sort}
+                />
+                <HeaderCell
+                  label="ΦΠΑ"
+                  sortfield="totalSalesTax"
+                  styleclass="numeric"
+                  currentsort={component.state.sortfield}
+                  currentdir={component.state.sortdir}
+                  onSort={component.sort}
+                />
+                <HeaderCell
+                  label="Συνολική αξία"
+                  sortfield="total"
+                  styleclass="numeric"
+                  currentsort={component.state.sortfield}
+                  currentdir={component.state.sortdir}
+                  onSort={component.sort}
+                />
               </tr>
             </thead>
             <tbody>
@@ -151,19 +252,39 @@ export default class DocumentList extends React.Component {
                           component.addRootPath(doc.permaLink),
                           "__new"
                         )}
-                        {doc.recipient.contact ? Cells.linkCell(`${doc.recipient.contact.lastName} ${doc.recipient.contact.firstName}`,
-                          undefined,
-                          component.userlinkfunc(doc),
-                          "__new"
-                        ) : Cells.cell("")}
+                        {doc.recipient.contact
+                          ? Cells.linkCell(`${doc.recipient.contact.lastName} ${doc.recipient.contact.firstName}`,undefined,
+                              component.userlinkfunc(doc),"__new")
+                          : Cells.cell("")}
                         {Cells.dateCell(doc.date, component.state.culture)}
-                        {Cells.statusCell(doc.status)}
+                        {component.isEditable(doc.id) ? (
+                          <ButtonCell value={doc.status} onClick={component.statusButtonHandler.bind(component,doc)}
+                            className={`status-${doc.status.toLowerCase()}`}/>
+                        ) : (
+                          <SelectCell
+                            value={doc.status}
+                            options={component.statusoptions}
+                            onChange={component.statusChangehandler.bind(component,doc)}
+                            onCancel={component.cancelStatusChangehandler.bind(component,doc)}/>
+                        )}
                         {Cells.cell(doc.paymentCode)}
                         {Cells.cell(component.getProduct(doc))}
                         {Cells.cell(doc.currencyCode)}
-                        {Cells.numericCell(doc.subTotal,doc.currencyCode,component.state.culture)}
-                        {Cells.numericCell(doc.totalSalesTax,doc.currencyCode,component.state.culture)}
-                        {Cells.numericCell(doc.total,doc.currencyCode,component.state.culture)}
+                        {Cells.numericCell(
+                          doc.subTotal,
+                          doc.currencyCode,
+                          component.state.culture
+                        )}
+                        {Cells.numericCell(
+                          doc.totalSalesTax,
+                          doc.currencyCode,
+                          component.state.culture
+                        )}
+                        {Cells.numericCell(
+                          doc.total,
+                          doc.currencyCode,
+                          component.state.culture
+                        )}
                       </tr>
                     );
                   })

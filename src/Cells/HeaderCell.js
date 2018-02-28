@@ -19,10 +19,8 @@ export default class HeaderCell extends React.Component {
     if (nextProps.currentsort !== this.state.currentsort || nextProps.currentdir !== this.state.currentdir) {
       if(nextProps.currentsort === this.sortfield) {
         _class = nextProps.currentdir  === "asc" ? "sortable sort-asc": "sortable sort-desc";
-        this.setState({className :  _class + " " + this.styleclass});
-      } else {
-        this.setState({className : _class + " " + this.styleclass});
       }
+      this.setState({className : `${_class} ${this.styleclass}`});
     }
   }
 

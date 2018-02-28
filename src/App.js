@@ -110,10 +110,6 @@ class App extends Component {
         <div>
           <hr/>
           <p>
-            <strong>APP STATE:</strong><br/>
-            <code>{JSON.stringify(this.state)}</code>
-          </p>
-          <p>
             <strong>NEW TOKEN:</strong><br/>
             <code>{this.state.new_token}</code>
           </p>
