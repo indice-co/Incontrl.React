@@ -318,7 +318,7 @@ export default class DocumentList extends React.Component {
                             onChange={component.statusChangeHandler.bind(component,doc)}
                             onCancel={component.cancelStatusChangeHandler.bind(component,doc)} />
                         )}
-                        <TextCell value={doc.paymentCode} />
+                        <LinkCell value={doc.paymentCode} href={component.linkfunc(doc)} target="__new" />
                         <TextCell value={component.getProduct(doc)} />
                         <TextCell value={doc.currencyCode} />
                         <TextCell value={component.numberFormatter.format(doc.subTotal)} className="numeric" />

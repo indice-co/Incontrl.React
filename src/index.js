@@ -11,9 +11,10 @@ var doctypeid = root.getAttribute("doc-type-id");
 var docid = root.getAttribute("doc-id");
 var view = root.getAttribute("view");
 var environment = root.getAttribute("environment");
-var debug = root.getAttribute("debug");
+var debug = root.getAttribute("debug") || false;
 var culture = root.getAttribute("culture");
 var userlink = root.getAttribute("user-link");
+var link = root.getAttribute("link");
 
 ReactDOM.render(
   <App
@@ -26,6 +27,7 @@ ReactDOM.render(
     docid={docid}
     view={view}
     userlink={userlink}
+    link={link}
   />,
   root
 );

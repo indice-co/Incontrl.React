@@ -14,20 +14,21 @@ class App extends Component {
       view: this.props.view,
       subscription: null,
       environment: this.props.environment,
-      debug: this.props.debug,
       culture: this.props.culture,
       userlink: this.props.userlink,
       link: this.props.link
     };
-    
+    this.debug = props.debug;
     if (!this.state.environment) {
       this.setState({environment: "sandbox"});
     }
   }
 
   componentDidMount() {
-    this.getToken();
-    this.getSubscriptions();
+    if (this.debug) {
+      this.getToken();
+      this.getSubscriptions();
+    }
   }
 
   getToken() {
@@ -79,7 +80,7 @@ class App extends Component {
   }
 
   appView() {
-    if (this.state.view === 'list' || this.state.view === 'documents' ) {
+    if (this.state.view === 'list' || this.state.view === 'documents') {
       return (<DocumentList
         token={this.state.access_token}
         subscriptionid={this.state.subscriptionid}
@@ -105,7 +106,7 @@ class App extends Component {
   }
 
   debugInfo() {
-    if (this.state.debug) {
+    if (this.debug) {
       return (
         <div>
           <hr/>

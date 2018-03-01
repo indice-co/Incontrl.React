@@ -15,15 +15,16 @@
   <noscript>
     You need to enable JavaScript to run this app.
   </noscript>
-  <div  id="root" debug="true" 
+  <div  id="root" debug="false" 
         environment="sandbox" 
-        token="eyJhbGciOiJSUzI1NiIsImtpZCI6IkJDMTQ3RjlFNzE3MTQ2RkY0NkJCQ0U2MUQ2NDM0NDRDOUY4N0IwQTEiLCJ0eXAiOiJKV1QiLCJ4NXQiOiJ2QlJfbm5GeFJ2OUd1ODVoMWtORVRKLUhzS0UifQ.eyJuYmYiOjE1MTk5MDU3MjIsImV4cCI6MTUxOTkwOTMyMiwiaXNzIjoiaHR0cHM6Ly9pbmNvbnRybC5pbyIsImF1ZCI6WyJodHRwczovL2luY29udHJsLmlvL3Jlc291cmNlcyIsImNvcmUiXSwiY2xpZW50X2lkIjoibmxnLXdvcmRwcmVzcy1vbmxpbmUiLCJzY29wZSI6WyJjb3JlIiwiY29yZTpiYW5raW5nIl19.HOhxSQ1ctCkB85p4qbswDYZ6lQiHNHSPGDsEdDPkeGEjGxx4eTPs9n_bfY8Q8rz2JRBoZv5sbUxT8UcsN2eX9UUv3_yVnocCrQyGl_gg9Wkg5jsULcog4Rafj_m38U3RNTkJ0KyGWgroSzF9RjzPhQUtQ9sfe_v5X67mu39XILJLzCpc9b5NThGWqz9oWBTQQml8UFsl5LFngyysBTQwCtnZPwVhEMaQOd1S5iRWQlLWFssqm2wNqqHSAOOTsTYYcRSkfaSNMMkJxOKsS4dkjjhbvT2mDVoFETQbyh11trKkkgYGjshJFeHoo9xVYGKcP-mNVvyjqmZHKwKS6-ikWQ"
+        token="eyJhbGciOiJSUzI1NiIsImtpZCI6IkJDMTQ3RjlFNzE3MTQ2RkY0NkJCQ0U2MUQ2NDM0NDRDOUY4N0IwQTEiLCJ0eXAiOiJKV1QiLCJ4NXQiOiJ2QlJfbm5GeFJ2OUd1ODVoMWtORVRKLUhzS0UifQ.eyJuYmYiOjE1MTk5MDk3OTAsImV4cCI6MTUxOTkxMzM5MCwiaXNzIjoiaHR0cHM6Ly9pbmNvbnRybC5pbyIsImF1ZCI6WyJodHRwczovL2luY29udHJsLmlvL3Jlc291cmNlcyIsImNvcmUiXSwiY2xpZW50X2lkIjoibmxnLXdvcmRwcmVzcy1vbmxpbmUiLCJzY29wZSI6WyJjb3JlIiwiY29yZTpiYW5raW5nIl19.kBwuJX68FaXiiZWWsME8UAFriNbqaApLVMrlaHFKQjX0rSbK_LEi_gTmkGT9-j-w_0GDYCDLwXWjlqKG2pRMGGIN8H1ymJSniUpUTekQNe_HMiTM0lJkJ3wulTEWq6k5hi_ZEWHMAUs8jAwbVTreJc1xBX8c-Ib7qUsmJWxQQdmZKZyLCt4UGipcn0oL4usVxAgPzQ7ujq-vmqZEJSQv5wraTRWb7Apcfqc2ogOHYHNIR0nEO69C0hpZvQbyGNjchlkYle7TKdjwKOodPzIlIWmXgqBppSw82xgo3YSaRp9z23UB85f00N6FWLVjATV8vwFfykHI_4EpFEpqCEwmOA"
         subscription-id="c6ef7b1f-bd9f-4b3c-bcb9-4fd187c4a997" 
         doc-type-id="c1f3a518-b1be-4486-cec2-08d5301b730e" 
         view="documents" 
-        link=""
+        link="x => x.code ? `/wp-admin/admin.php?page=incontrl-external-page&documentId=&#36;{x.id}&entryId=&#36;{x.code}&paymentCode=&#36;{x.paymentCode}` : null;"
         culture="el-GR">
   </div>
+  <!-- &#36; --> $ -->
 </body>
 
 </html>
