@@ -3,7 +3,6 @@ import React from "react";
 export default class TextCell extends React.Component {
   constructor(props) {
     super(props);
-    // this.onClickHandler = props.onClick;
     this.value = props.value || "";
     this.className = props.className || "";
   }

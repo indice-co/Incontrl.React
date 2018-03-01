@@ -3,7 +3,6 @@ import React from "react";
 export default class LinkCell extends React.Component {
   constructor(props) {
     super(props);
-    //this.onClickHandler = props.onClick;
     this.value = props.value;
     this.className = props.className;
     this.href = props.href;

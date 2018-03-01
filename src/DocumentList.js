@@ -284,9 +284,7 @@ export default class DocumentList extends React.Component {
                 />
               </tr>
             </thead>
-            <tbody>
-              {this.state.documents
-                ? this.state.documents.map(function(doc) {
+            <tbody>{this.state.documents? this.state.documents.map(function(doc) {
                     return (
                       <tr key={doc.id}>
                         <LinkCell
