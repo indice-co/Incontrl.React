@@ -3,8 +3,11 @@ import React from "react";
 export default class ButtonCell extends React.Component {
   constructor(props) {
     super(props);
-    this.onClickHandler = props.onClick;
+    this.state = {
+      value : props.value
+    }
     this.value = props.value;
+    this.onClickHandler = props.onClick;
     this.className = props.className;
   }
 
@@ -14,11 +17,21 @@ export default class ButtonCell extends React.Component {
     }
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    var should = this.value !== nextProps.value;
+    return should;
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({value : nextProps.value});
+  }
+
+
   render() {
     return (
       <td className={this.className}>
         <span className={this.className}>
-          <button onClick={this.onClick.bind(this)} className={this.className}>{this.value}</button>
+          <button onClick={this.onClick.bind(this)} className={this.className}>{this.state.value}</button>
         </span>
       </td>
     );
