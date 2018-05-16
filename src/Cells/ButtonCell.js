@@ -29,9 +29,9 @@ export default class ButtonCell extends React.Component {
 
   render() {
     return (
-      <td className={this.className}>
-        <span className={this.className}>
-          <button onClick={this.onClick.bind(this)} className={this.className}>{this.state.value}</button>
+      <td className={this.state.value.toLowerCase()}>
+        <span className={this.state.value.toLowerCase()}>
+          <button onClick={this.onClick.bind(this)} className={`status-${this.state.value.toLowerCase()}`}>{this.state.value}</button>
         </span>
       </td>
     );

@@ -20,7 +20,8 @@ export default class DocumentList extends React.Component {
       sortdir: "asc",
       pagesize: 20,
       page: 1,
-      count: 0
+      count: 0,
+      searchTerm: ''
     };
     this.environment = this.props.environment;
     this.subscriptionid = this.props.subscriptionid;
@@ -89,7 +90,8 @@ export default class DocumentList extends React.Component {
     var size = `&size=${component.state.pagesize}`;
     var page = `&page=${component.state.page}`;
     var culture = `&culture=${component.state.culture}`;
-    var url = `https://${component.environment}.incontrl.io/subscriptions/${component.subscriptionid}/documents${doctype}${page}${size}${sort}${culture}`;
+    var searchTerm = `&Search=${component.state.searchTerm}`
+    var url = `https://${component.environment}.incontrl.io/subscriptions/${component.subscriptionid}/documents${doctype}${page}${size}${sort}${culture}${searchTerm}`;
     console.log(url);
     xhr.open("GET", url);
     xhr.setRequestHeader("Authorization","Bearer " + component.state.access_token);
@@ -185,6 +187,10 @@ export default class DocumentList extends React.Component {
     xhr.send(JSON.stringify({ status: newStatus, force: force }));
   }
 
+  searchTermChangeHandler(e) {
+    this.setState({ searchTerm: e.target.value });
+  }
+
   cancelStatusChangeHandler(doc, e) {
     console.log("cancelStatusChangeHandler " + doc.id);
     this.setState({
@@ -204,6 +210,12 @@ export default class DocumentList extends React.Component {
     var component = this;
     return (
       <div>
+        <div className="search-form">
+          <form id="document_search_form" onSubmit={e => { e.preventDefault(); component.search(); }} >
+            <input type="search" value={component.state.searchTerm} onChange={ component.searchTermChangeHandler.bind(this)} /> 
+            <button type="submit">Search</button>
+          </form>
+        </div>
         <Pager
           onChange={this.pageChanged}
           pagesize={this.state.pagesize}
@@ -294,9 +306,7 @@ export default class DocumentList extends React.Component {
                         />
                         {doc.recipient.contact ? (
                           <LinkCell
-                            value={`${doc.recipient.contact.lastName} ${
-                              doc.recipient.contact.firstName
-                            }`}
+                            value={`${doc.recipient.contact.lastName || ''} ${doc.recipient.contact.firstName || ''}`.trim()}
                             href={component.userlinkfunc(doc)}
                             target="__new"
                           />

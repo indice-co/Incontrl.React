@@ -16,7 +16,9 @@ class App extends Component {
       environment: this.props.environment,
       culture: this.props.culture,
       userlink: this.props.userlink,
-      link: this.props.link
+      link: this.props.link,
+      searchText: '',
+      searchResults: []
     };
     this.debug = props.debug;
     if (!this.state.environment) {
@@ -50,7 +52,7 @@ class App extends Component {
       }
     });
 
-    xhr.open("POST", "http://www.incontrl.io/connect/token", true);
+    xhr.open("POST", "https://identity.incontrl.io/connect/token", true);
     xhr.setRequestHeader("Authorization", "Basic bmxnLXdvcmRwcmVzcy1vbmxpbmU6d0VzR0xnYVh5azJvZXVwR1Q0cGZXZw==");
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xhr.setRequestHeader("Cache-Control", "no-cache");
