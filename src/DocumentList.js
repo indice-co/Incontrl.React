@@ -159,9 +159,7 @@ export default class DocumentList extends React.Component {
 
   statusChangeHandler(doc, e) {
     console.log("statusChangeHandler " + doc.id);
-    if (window.confirm(`Change document status to : ${e.target.value} ?`)) {
-      this.changeStatus(doc, e.target.value);
-    }
+    this.changeStatus(doc, e.target.value);
     this.setState({
       editdocid: null
     });
@@ -174,7 +172,6 @@ export default class DocumentList extends React.Component {
       if (xhr.readyState === 4) {
         if (xhr.status === 200) {
           doc.status = newStatus;
-          alert(`Status changed to ${newStatus}!`);
           component.forceUpdate();
           component.stopLoading();
         } else if(xhr.status === 400 && !force) {

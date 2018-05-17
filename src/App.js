@@ -21,7 +21,7 @@ class App extends Component {
       searchResults: [],
       
     };
-    this.debug = props.debug;
+    this.debug = props.debug === 'true';
     if (!this.state.environment) {
       this.setState({environment: "sandbox"});
     }
