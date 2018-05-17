@@ -18,7 +18,8 @@ class App extends Component {
       userlink: this.props.userlink,
       link: this.props.link,
       searchText: '',
-      searchResults: []
+      searchResults: [],
+      
     };
     this.debug = props.debug;
     if (!this.state.environment) {

@@ -21,7 +21,8 @@ export default class DocumentList extends React.Component {
       pagesize: 20,
       page: 1,
       count: 0,
-      searchTerm: ''
+      searchTerm: '',
+      isLoading: false
     };
     this.environment = this.props.environment;
     this.subscriptionid = this.props.subscriptionid;
@@ -52,6 +53,12 @@ export default class DocumentList extends React.Component {
     });
 
     this.dateFormatter = new Intl.DateTimeFormat(this.culture);
+  }
+  startLoading() {
+    this.setState({isLoading: true});
+  }
+  stopLoading() {
+    this.setState({isLoading: false});
   }
 
   componentDidMount() {
@@ -169,12 +176,14 @@ export default class DocumentList extends React.Component {
           doc.status = newStatus;
           alert(`Status changed to ${newStatus}!`);
           component.forceUpdate();
+          component.stopLoading();
         } else if(xhr.status === 400 && !force) {
           if(window.confirm(`Change document status to : ${newStatus} is not allowed - do you want to force the status change ?`)) {
             return component.changeStatus(doc, newStatus, true);
           }
         } else {
           alert(`Failed to change to status ${newStatus}!`);
+          component.stopLoading();
         }
       }
     });
@@ -184,7 +193,9 @@ export default class DocumentList extends React.Component {
     xhr.setRequestHeader("Authorization","Bearer " + component.state.access_token);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.setRequestHeader("Cache-Control", "no-cache");
+    component.startLoading();
     xhr.send(JSON.stringify({ status: newStatus, force: force }));
+    
   }
 
   searchTermChangeHandler(e) {
@@ -317,6 +328,7 @@ export default class DocumentList extends React.Component {
                         {component.isEditable(doc.id) ? (
                           <ButtonCell
                             value={doc.status}
+                            isLoading={component.state.isLoading}
                             onClick={component.statusButtonHandler.bind(
                               component,
                               doc
