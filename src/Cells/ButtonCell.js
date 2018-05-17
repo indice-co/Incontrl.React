@@ -32,7 +32,7 @@ export default class ButtonCell extends React.Component {
       <td className={classes}>
         <span className={this.state.value.toLowerCase()}>
           <button onClick={this.onClick.bind(this)} className={`status-${this.state.value.toLowerCase()}`}>
-            <span className={this.props.isLoading!== undefined && this.props.isLoading === true?'spinner' : ''}>{this.state.value}</span>
+            <span className={this.props.isLoading!== undefined && this.props.isLoading === true?'inc-spinner' : ''}>{this.state.value}</span>
           </button>
         </span>
       </td>
