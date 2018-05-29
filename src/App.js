@@ -7,6 +7,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      client_credentials: this.props.client_credentials,
       access_token: this.props.token,
       subscriptionid: this.props.subscriptionid,
       doctypeid: this.props.doctypeid,
@@ -54,7 +55,7 @@ class App extends Component {
     });
 
     xhr.open("POST", "https://identity.incontrl.io/connect/token", true);
-    xhr.setRequestHeader("Authorization", "Basic bmxnLXdvcmRwcmVzcy1vbmxpbmU6d0VzR0xnYVh5azJvZXVwR1Q0cGZXZw==");
+    xhr.setRequestHeader("Authorization", "Basic " + this.state.client_credentials);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xhr.setRequestHeader("Cache-Control", "no-cache");
     xhr.send(data);

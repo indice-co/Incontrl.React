@@ -6,6 +6,7 @@ import registerServiceWorker from "./registerServiceWorker";
 
 var root = document.getElementById("root");
 var token = root.getAttribute("token");
+var client_credentials = root.getAttribute("client_credentials");
 var subscriptionid = root.getAttribute("subscription-id");
 var doctypeid = root.getAttribute("doc-type-id");
 var docid = root.getAttribute("doc-id");
@@ -28,6 +29,7 @@ ReactDOM.render(
     view={view}
     userlink={userlink}
     link={link}
+    client_credentials={client_credentials}
   />,
   root
 );
