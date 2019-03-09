@@ -21,7 +21,7 @@ export default class Pager extends React.Component {
       var pagecount = Math.round(
         (nextProps.count + this.state.pagesize - 1) / this.state.pagesize
       );
-      this.setState({ pagecount: pagecount-1 });
+      this.setState({ pagecount: pagecount });
     }
   }
 
